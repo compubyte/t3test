@@ -38,7 +38,7 @@ export default async function Home() {
             </div>
           </div>
 
-          {session?.user && <LatestPost />}
+          {/* {session?.user && <LatestPost />} */}
           {session?.user && <ListaCategorias />}
         </div>
       </main>

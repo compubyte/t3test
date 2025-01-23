@@ -32,19 +32,30 @@ export function ListaCategorias() {
       >
         <div>
           <h2>Categorías</h2>
-          <ul>
-            {listaCategorias.map((categoria) => (
-              <li key={categoria.id}>{categoria.nombre}</li>
-            ))}
-          </ul>
+          <table className="min-w-full border-collapse border border-gray-200">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+              </tr>
+            </thead>
+            <tbody>
+              {listaCategorias.map((categoria) => (
+                <tr key={categoria.id}>
+                  <td>{categoria.id}</td>
+                  <td>{categoria.nombre}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-        <input
+        {/* <input
           type="text"
           placeholder="Title"
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="w-full rounded-full px-4 py-2 text-black"
-        />
+        /> */}
         {/* <button
           type="submit"
           className="rounded-full bg-white/10 px-10 py-3 font-semibold transition hover:bg-white/20"
