@@ -2,6 +2,7 @@ import { relations, sql } from "drizzle-orm";
 import {
   index,
   integer,
+  numeric,
   pgTableCreator,
   primaryKey,
   text,
@@ -127,3 +128,18 @@ export const verificationTokens = createTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
 );
+
+// Tabla de Categorías
+export const tablaCategorias = createTable("categorias", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  nombre: varchar("nombre", { length: 255 }).notNull(),
+});
+
+// Tabla de Productos
+export const tablaProductos = createTable("productos", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  nombre: varchar("nombre", { length: 255 }).notNull(),
+  precioUnitario: numeric("precioUnitario").notNull(),
+  inventario: integer("inventario").default(0).notNull(),
+  categoriaId: integer("categoriaId").notNull().references(() => tablaCategorias.id), // Relación con la tabla categorias
+});
