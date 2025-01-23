@@ -140,6 +140,6 @@ export const tablaProductos = createTable("productos", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   nombre: varchar("nombre", { length: 255 }).notNull(),
   precioUnitario: numeric("precioUnitario").notNull(),
-  inventario: integer("inventario").default(0).notNull(),
+  inventario: numeric("inventario").default(sql`0`).notNull(),
   categoriaId: integer("categoriaId").notNull().references(() => tablaCategorias.id), // Relación con la tabla categorias
 });

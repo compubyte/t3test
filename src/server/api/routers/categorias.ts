@@ -35,7 +35,7 @@ export const categoriasRouter = createTRPCRouter({
 
   getList: protectedProcedure.query(async ({ ctx }) => {
     const listaCategorias = await ctx.db.query.tablaCategorias.findMany({
-      orderBy: (tablaCategorias, { desc }) => [desc(tablaCategorias.id)],
+      orderBy: (tablaCategorias, { asc }) => [asc(tablaCategorias.id)],
     });
     return listaCategorias ?? [];
   }),
