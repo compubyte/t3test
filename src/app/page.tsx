@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { auth } from "@/server/auth";
 import { api, HydrateClient } from "@/trpc/server";
-import {
-  FormularioCategorias,
-  ListadoCategorias,
-} from "./_components/categorias";
+// import {
+//   FormularioCategorias,
+//   ListadoCategorias,
+// } from "./_components/categorias";
 
 export default async function Home() {
-  const hello = await api.post.hello({ text: "from tRPC" });
+  //const hello = await api.post.hello({ text: "from tRPC" });
   const session = await auth();
 
   if (session?.user) {

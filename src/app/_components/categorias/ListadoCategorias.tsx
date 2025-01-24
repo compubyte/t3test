@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-
 import { api } from "@/trpc/react";
 
 export function ListadoCategorias() {
@@ -20,7 +19,9 @@ export function ListadoCategorias() {
   //Limpiar filtro
   const handleClearFilter = async () => {
     setFiltro("");
-    setPatternFiltro("");
+    if (patternFiltro == "x") {
+      setPatternFiltro("");
+    }
   };
 
   //Filtrar
@@ -28,8 +29,8 @@ export function ListadoCategorias() {
     setPatternFiltro(filtro);
   };
 
-  const utils = api.useUtils();
-  const [name, setName] = useState("");
+  //const utils = api.useUtils();
+  //const [name, setName] = useState("");
   // const createPost = api.post.create.useMutation({
   //   onSuccess: async () => {
   //     await utils.post.invalidate();

@@ -5,8 +5,6 @@ import { useSession } from "next-auth/react";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 export default function DashBoard() {
-  const { data: session } = useSession();
-
   return (
     <ProtectedRoute>
       <>
