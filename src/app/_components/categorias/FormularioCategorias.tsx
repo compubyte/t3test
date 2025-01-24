@@ -47,7 +47,7 @@ export function FormularioCategorias() {
         id,
         nombre,
       }); */
-      handleClear; // Reinicia el estado del cliente seleccionado
+      //await handleClear; // Reinicia el estado del cliente seleccionado
     } catch (error) {
       alert("Error al guardar el cliente. Intenta nuevamente.");
       console.error(error);

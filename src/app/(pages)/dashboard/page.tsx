@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+//import { useSession } from "next-auth/react";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 export default function DashBoard() {
