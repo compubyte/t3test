@@ -1,20 +1,36 @@
 "use client";
 
 import Link from "next/link";
-//import { useSession } from "next-auth/react";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import { Button } from "@/components/ui/button";
+import { LogOut, Shapes } from "lucide-react";
 
 export default function DashBoard() {
   return (
     <ProtectedRoute>
       <>
-        <h1>DashBoard Page!</h1>
-        <Link
-          href="/api/auth/signout"
-          className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
+        <Button
+          asChild
+          className="rounded-xl bg-gray-600 px-5 py-5 font-semibold no-underline transition hover:bg-gray-900"
         >
-          Cerrar sesión
-        </Link>
+          <Link href="/dashboard/categorias">
+            <span className="flex items-center space-x-2">
+              <Shapes size={24} />
+              <span>Categorías</span>
+            </span>
+          </Link>
+        </Button>
+        <Button
+          asChild
+          className="rounded-xl bg-gray-600 px-5 py-5 font-semibold no-underline transition hover:bg-gray-900"
+        >
+          <Link href="/api/auth/signout">
+            <span className="flex items-center space-x-2">
+              <LogOut size={24} />
+              <span>Cerrar sesión</span>
+            </span>
+          </Link>
+        </Button>
       </>
     </ProtectedRoute>
   );
