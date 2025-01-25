@@ -26,10 +26,12 @@ export const categoriasRouter = createTRPCRouter({
           throw new Error("Database client is not available in the context.");
         }
         // Obtén la lista de categorías
-        console.log(`Fetching categories... ${input.text}`);
+        console.log(`*********** Fetching... ${input.text} *************`);
         const listaCategorias = await ctx.db.query.tablaCategorias.findMany({
           orderBy: (tablaCategorias, { asc }) => [asc(tablaCategorias.id)],
         });
+        console.log(listaCategorias);
+
         // Retorna un arreglo vacío si no hay categorías
         return listaCategorias;
       } catch (error) {
