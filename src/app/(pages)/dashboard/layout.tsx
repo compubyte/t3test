@@ -1,5 +1,7 @@
 import "@/styles/globals.css";
-import { Navbar } from "@/app/_components/dashboard/NavBar";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import { MenuBar } from "@/app/_components/dashboard/MenuBar";
+import { ThemeProvider } from "@/app/_components/dashboard/ThemeProvider";
 
 export default function RootLayout({
   children,
@@ -7,9 +9,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <Navbar />
-      {children}
-    </>
+    <ProtectedRoute>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <MenuBar />
+        {children}
+      </ThemeProvider>
+    </ProtectedRoute>
   );
 }

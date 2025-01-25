@@ -1,5 +1,6 @@
 "use client"; // Asegúrate de marcar este componente como del lado del cliente
 
+import { LoadingSpinner } from "@/app/_components/LoadingSpinner";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -20,7 +21,7 @@ export default function ProtectedRoute({
   }, [session, status, router]);
 
   if (status === "loading") {
-    return <p>Loading...</p>; // Muestra un mensaje de carga mientras se verifica la sesión
+    return <LoadingSpinner />; // Muestra un mensaje de carga mientras se verifica la sesión
   }
 
   if (!session) {

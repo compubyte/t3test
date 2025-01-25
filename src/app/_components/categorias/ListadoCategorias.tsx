@@ -1,14 +1,9 @@
-"use client";
-export const dynamic = "force-dynamic";
-
 import { api } from "@/trpc/react";
 import TablaCategorias from "./TablaCategorias";
 import { RowClickProvider } from "./RowClickProvider";
 
 export function ListadoCategorias() {
-  const [listaCategorias] = api.categorias.getList.useSuspenseQuery({
-    text: "Categorías",
-  });
+  const [listaCategorias] = api.categorias.getList.useSuspenseQuery();
 
   return (
     <div className="mb-4 flex items-center justify-normal space-x-4">
