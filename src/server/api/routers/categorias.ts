@@ -18,7 +18,7 @@ export const categoriasRouter = createTRPCRouter({
   getList: publicProcedure.query(async ({ ctx }) => {
     try {
       // Verifica que el cliente de la base de datos exista
-      if (!ctx.db || !ctx.db.query) {
+      if (!ctx.db?.query) {
         console.error("Database client is not available in the context.");
         throw new Error("Database client is not available in the context.");
       }
