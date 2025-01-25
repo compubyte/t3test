@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { api } from "@/trpc/react";
 import TablaCategorias from "./TablaCategorias";
 import { RowClickProvider } from "./RowClickProvider";

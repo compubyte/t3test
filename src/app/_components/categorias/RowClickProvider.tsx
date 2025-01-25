@@ -23,13 +23,8 @@ export const useRowClick = () => {
   return useContext(RowClickContext);
 };
 
-// Define las props para el proveedor
-type RowClickProviderProps = {
-  children: ReactNode;
-};
-
 // Proveedor del contexto
-export const RowClickProvider = ({ children }: RowClickProviderProps) => {
+export const RowClickProvider = ({ children }: { children: ReactNode }) => {
   // Estado para almacenar la fila seleccionada
   const [selectedRow, setSelectedRow] = useState<number>(0);
 
