@@ -6,7 +6,9 @@ import TablaCategorias from "./TablaCategorias";
 import { RowClickProvider } from "./RowClickProvider";
 
 export function ListadoCategorias() {
-  const [listaCategorias] = api.categorias.getList.useSuspenseQuery();
+  const [listaCategorias] = api.categorias.getList.useSuspenseQuery({
+    text: "Categorías",
+  });
 
   return (
     <div className="mb-4 flex items-center justify-normal space-x-4">
