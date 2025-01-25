@@ -17,13 +17,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useRowClick } from "./categorias/RowClickProvider";
 
 interface PaginacionProps {
   totalItems: number;
   initialItemsPerPage?: number;
   onPageChange: (page: number) => void;
   onItemsPerPageChange: (itemsPerPage: number) => void;
-  handleRowClick: (id: number) => void;
 }
 
 export default function Paginacion({
@@ -31,13 +31,13 @@ export default function Paginacion({
   initialItemsPerPage = 10,
   onPageChange,
   onItemsPerPageChange,
-  handleRowClick,
 }: PaginacionProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(initialItemsPerPage);
   const [totalPages, setTotalPages] = useState(
     Math.ceil(totalItems / itemsPerPage),
   );
+  const { handleRowClick } = useRowClick();
 
   useEffect(() => {
     setTotalPages(Math.ceil(totalItems / itemsPerPage));

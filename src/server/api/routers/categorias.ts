@@ -16,7 +16,7 @@ export const categoriasRouter = createTRPCRouter({
         createdById: ctx.session.user.id,
       });
     }),
-  getList: protectedProcedure.query(async ({ ctx }) => {
+  getList: publicProcedure.query(async ({ ctx }) => {
     const listaCategorias = await ctx.db.query.tablaCategorias.findMany({
       orderBy: (tablaCategorias, { asc }) => [asc(tablaCategorias.id)],
     });

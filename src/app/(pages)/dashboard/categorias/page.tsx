@@ -1,4 +1,4 @@
-import { ListadoCategorias } from "@/app/_components/categorias";
+import { ListadoCategorias } from "@/app/_components/categorias/ListadoCategorias";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 

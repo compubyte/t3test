@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import Paginacion from "../Paginacion";
+import { useRowClick } from "./RowClickProvider";
 
 interface Categoria {
   id: number;
@@ -19,20 +20,17 @@ interface Categoria {
 
 interface TablaCategoriasProps {
   listaCategorias: Categoria[];
-  selectedRow: number | null;
-  handleRowClick: (id: number) => void;
 }
 
 export default function TablaCategorias({
   listaCategorias,
-  selectedRow,
-  handleRowClick,
 }: TablaCategoriasProps) {
   const [filteredCategorias, setFilteredCategorias] =
     useState<Categoria[]>(listaCategorias);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const { handleRowClick, selectedRow } = useRowClick();
 
   useEffect(() => {
     const filtered = listaCategorias.filter((categoria) =>
@@ -105,7 +103,6 @@ export default function TablaCategorias({
         initialItemsPerPage={itemsPerPage}
         onPageChange={handlePageChange}
         onItemsPerPageChange={handleItemsPerPageChange}
-        handleRowClick={handleRowClick}
       />
     </div>
   );
