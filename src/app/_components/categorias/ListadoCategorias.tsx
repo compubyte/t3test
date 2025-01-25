@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import { api } from "@/trpc/react";
 import TablaCategorias from "./TablaCategorias";
