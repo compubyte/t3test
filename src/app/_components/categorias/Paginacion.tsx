@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useRowClick } from "./categorias/RowClickProvider";
+import { useRowClick } from "./RowClickProvider";
 
 interface PaginacionProps {
   totalItems: number;

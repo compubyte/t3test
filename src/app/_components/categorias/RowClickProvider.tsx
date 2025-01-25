@@ -15,7 +15,7 @@ interface RowClickContextType {
 // Crea el contexto con un valor por defecto
 const RowClickContext = createContext<RowClickContextType>({
   selectedRow: 0,
-  handleRowClick: () => {}, // Función vacía por defecto
+  handleRowClick: () => undefined, // Función vacía por defecto
 });
 
 // Exporta un hook personalizado para usar el contexto fácilmente

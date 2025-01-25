@@ -7,13 +7,6 @@ import { RowClickProvider } from "./RowClickProvider";
 
 export function ListadoCategorias() {
   const [listaCategorias] = api.categorias.getList.useSuspenseQuery();
-  // Estado para la fila seleccionada
-  const [selectedRow, setSelectedRow] = useState(0);
-
-  // Seleccionar
-  const handleRowClick = (id: number) => {
-    setSelectedRow(id); // Actualiza el estado de la fila seleccionada
-  };
 
   return (
     <div className="mb-4 flex items-center justify-normal space-x-4">

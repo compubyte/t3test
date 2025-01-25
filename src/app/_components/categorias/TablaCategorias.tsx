@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-import Paginacion from "../Paginacion";
+import Paginacion from "./Paginacion";
 import { useRowClick } from "./RowClickProvider";
 
 interface Categoria {
@@ -38,7 +38,6 @@ export default function TablaCategorias({
     );
     setFilteredCategorias(filtered);
     setCurrentPage(1);
-    handleRowClick(0); // Para borrar selección de fila de grilla
   }, [searchTerm, listaCategorias]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
