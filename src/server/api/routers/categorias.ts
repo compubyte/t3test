@@ -27,7 +27,7 @@ export const categoriasRouter = createTRPCRouter({
         orderBy: (tablaCategorias, { asc }) => [asc(tablaCategorias.id)],
       });
       // Retorna un arreglo vacío si no hay categorías
-      return listaCategorias ?? [];
+      return listaCategorias;
     } catch (error) {
       console.error("Error fetching categories:", error);
       throw new Error("Failed to fetch categories. Please try again later.");
