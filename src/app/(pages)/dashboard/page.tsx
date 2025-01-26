@@ -4,6 +4,7 @@ import Link from "next/link";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { Button } from "@/components/ui/button";
 import { LogOut, Shapes } from "lucide-react";
+import { signOut } from "next-auth/react";
 
 export default function DashBoard() {
   return (
@@ -23,13 +24,12 @@ export default function DashBoard() {
       <Button
         asChild
         className="rounded-xl bg-gray-600 px-5 py-5 font-semibold no-underline transition hover:bg-gray-900"
+        onClick={() => signOut({ callbackUrl: "/" })}
       >
-        <Link href="/api/auth/signout">
-          <span className="flex items-center space-x-2">
-            <LogOut size={24} />
-            <span>Cerrar sesión</span>
-          </span>
-        </Link>
+        <span className="flex items-center space-x-2">
+          <LogOut size={24} />
+          <span>Cerrar sesión</span>
+        </span>
       </Button>
     </>
   );

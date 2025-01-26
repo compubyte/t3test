@@ -10,8 +10,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-import Paginacion from "./Paginacion";
-import { useRowClick } from "./RowClickProvider";
+import Paginacion from "../_generics/Paginacion";
+import { useRowClick } from "../_generics/RowClickProvider";
+import ActionCard from "../_generics/ActionCard";
+import { Card } from "@/components/ui/card";
 
 interface Categoria {
   id: number;
@@ -38,6 +40,7 @@ export default function TablaCategorias({
     );
     setFilteredCategorias(filtered);
     setCurrentPage(1);
+    handleRowClick(0);
   }, [searchTerm, listaCategorias]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -58,14 +61,19 @@ export default function TablaCategorias({
   };
 
   return (
-    <div className="space-y-4">
-      <Input
-        type="text"
-        placeholder="Buscar..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="max-w-sm"
-      />
+    <div className="space-y-2">
+      <div className="flex w-full items-center">
+        <Card className="ml-auto flex w-full flex-wrap items-center gap-2 p-3 shadow-lg">
+          <ActionCard />
+          <Input
+            type="text"
+            placeholder="Buscar..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="max-w-sm"
+          />
+        </Card>
+      </div>
       <p>{selectedRow}</p>
       <div className="rounded-md border">
         <Table>

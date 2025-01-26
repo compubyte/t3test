@@ -1,6 +1,6 @@
 "use client"; // Asegúrate de marcar este componente como del lado del cliente
 
-import { LoadingSpinner } from "@/app/_components/LoadingSpinner";
+import { LoadingSpinner } from "@/app/_components/_generics/LoadingSpinner";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";

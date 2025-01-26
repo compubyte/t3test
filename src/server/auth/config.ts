@@ -59,8 +59,6 @@ export const authConfig = {
     verificationTokensTable: verificationTokens,
   }),
   pages: {
-    signIn: "/auth/signinuser", // Ruta personalizada para la página de inicio de sesión
-    signOut: "/auth/signoutuser", // Ruta personalizada para la página de cierre de sesión
     error: "/auth/notsession", // Ruta personalizada para la página de sesión no iniciada
   },
   callbacks: {
