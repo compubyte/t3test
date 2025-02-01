@@ -1,7 +1,6 @@
-import Link from "next/link";
 import { auth } from "@/server/auth";
 import { api, HydrateClient } from "@/trpc/server";
-import { LoginForm } from "./_components/auth/LoginForm";
+import { LoginForm, LoginData } from "./_components/auth";
 
 export default async function Home() {
   //const hello = await api.post.hello({ text: "from tRPC" });
@@ -13,9 +12,17 @@ export default async function Home() {
 
   return (
     <HydrateClient>
-      <div className="flex min-h-screen">
-        {/* Mitad izquierda con texto */}
-        <div className="flex flex-1 flex-col bg-gray-100 p-8">
+      <div className="temas flex min-h-screen flex-col lg:flex-row">
+        {/* Mitad derecha con el formulario de login (arriba en móvil, derecha en desktop) */}
+        <div className="order-1 flex flex-1 items-center justify-center p-8 lg:order-2">
+          <div className="w-full max-w-md">
+            {!session?.user && <LoginForm />}
+            {session?.user && <LoginData userName={session?.user.name ?? ""} />}
+          </div>
+        </div>
+
+        {/* Mitad izquierda con texto (abajo en móvil, izquierda en desktop) */}
+        <div className="order-2 flex flex-1 flex-col bg-gray-200 p-8 lg:order-1">
           {/* Contenido principal de la mitad izquierda */}
           <div className="flex flex-1 flex-col items-center justify-center">
             <div className="max-w-lg">
@@ -23,8 +30,8 @@ export default async function Home() {
                 Bienvenido a T3 Test App
               </h1>
               <p className="text-lg text-gray-800">
-                Este es un simple ejemplo de aplicación de las diferentes
-                tecnologías del stack T3.
+                Este desarrollo es un ejemplo de la utilización de diferentes
+                tecnologías que se encuentran en el atack de T3.
               </p>
               <p className="text-lg text-gray-800">
                 T3 Test App está estilizado con Shadcn/ui y Tailwind CSS para
@@ -33,8 +40,7 @@ export default async function Home() {
               <p className="text-lg text-gray-800">
                 El acceso a datos está orquestado con el ORM Drizzle y la
                 tecnología de APIs tipadas de tRPC. Además, se aplica
-                autenticación con NextAuth para el acceso a la App y la
-                protección de rutas.
+                autenticación con NextAuth y protección de rutas.
               </p>
             </div>
           </div>
@@ -42,15 +48,10 @@ export default async function Home() {
           {/* Span en la parte baja de la mitad izquierda */}
           <div className="p-4 text-end">
             <span className="text-gray-600">
-              Creado por Daniel Fabian Zampini para Codesud Chile SPA.
+              Creado por{" "}
+              <span className="font-semibold">Daniel Fabian Zampini</span> para{" "}
+              <span className="font-semibold">Codesud Chile SPA</span>
             </span>
-          </div>
-        </div>
-
-        {/* Mitad derecha con el formulario de login */}
-        <div className="flex flex-1 items-center justify-center bg-white p-8">
-          <div className="w-full max-w-md">
-            <LoginForm />
           </div>
         </div>
       </div>

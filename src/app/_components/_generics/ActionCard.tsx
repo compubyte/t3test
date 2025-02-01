@@ -1,31 +1,3 @@
-// "use client";
-
-// import { Button } from "@/components/ui/button";
-// import { PlusCircle, Edit, Trash2, RefreshCw } from "lucide-react";
-
-// export default function ActionCard() {
-//   return (
-//     <div className="ml-auto flex flex-wrap justify-end gap-1">
-//       <Button variant="outline" className="flex items-center gap-2">
-//         <PlusCircle className="h-4 w-4" />
-//         Agregar
-//       </Button>
-//       <Button variant="outline" className="flex items-center gap-2">
-//         <Edit className="h-4 w-4" />
-//         Editar
-//       </Button>
-//       <Button variant="outline" className="flex items-center gap-2">
-//         <Trash2 className="h-4 w-4" />
-//         Eliminar
-//       </Button>
-//       <Button variant="outline" className="flex items-center gap-2">
-//         <RefreshCw className="h-4 w-4" />
-//         Recargar
-//       </Button>
-//     </div>
-//   );
-// }
-
 "use client"; // Asegúrate de que este componente sea del lado del cliente
 
 import { useState } from "react";
@@ -75,12 +47,12 @@ export default function BotonesAcordeon() {
   };
 
   return (
-    <div className="tam-700:flex-row ml-auto flex w-full flex-col items-start justify-center gap-1">
+    <div className="ml-auto flex w-full flex-col items-start justify-center gap-1 tam-700:flex-row">
       {/* Botón para alternar el acordeón en pantallas pequeñas */}
       <Button
         variant="outline"
         onClick={toggleAcordeon}
-        className="tam-700:hidden flex items-center gap-2"
+        className="flex items-center gap-2 tam-700:hidden"
       >
         {isOpen ? (
           <ChevronUp className="h-4 w-4" />
@@ -92,7 +64,7 @@ export default function BotonesAcordeon() {
 
       {/* Grupo de botones */}
       <div
-        className={`${isOpen ? "flex" : "hidden"} tam-700:flex tam-700:w-auto tam-700:flex-row w-auto flex-col gap-1`}
+        className={`${isOpen ? "flex" : "hidden"} w-auto flex-col gap-1 tam-700:flex tam-700:w-auto tam-700:flex-row`}
       >
         <Button
           variant="outline"

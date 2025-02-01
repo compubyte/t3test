@@ -14,7 +14,8 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="es">
-      <body>
+      {/* temas = @apply bg-gray-50 dark:bg-gray-900; */}
+      <body className="temas">
         <SessionProvider>
           <TRPCReactProvider>{children}</TRPCReactProvider>
         </SessionProvider>

@@ -64,3 +64,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+.temas {
+  @apply bg-gray-300 dark:bg-gray-800;
+}
+
+.temas-contenedor {
+  @apply bg-gray-400 dark:bg-gray-700;
+}

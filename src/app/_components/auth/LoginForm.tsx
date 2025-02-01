@@ -13,34 +13,45 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { useRouter } from "next/navigation";
+import CustomAlertDialog from "../_generics/CustomAlertDialog";
+import { GitBranch, Mail, SquareUserRound, UserRound } from "lucide-react";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  // Hooks para Credentials
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   // Hook para AlertMail
-  const [isDialogNoServiceOpen, setIsDialogNoServiceOpen] = useState(false);
+  const [isDialogAuthCredentials, setIsDialogAuthCredentials] = useState(false);
 
-  // Funciones para AlertNoService
-  const handleConfirmDialogNoService = () => {
-    // Aquí la funcionalidad de aceptar/si
-    setIsDialogNoServiceOpen(false); // Cierra el diálogo
+  const router = useRouter();
+
+  const handleConfirmDialogAuthCredentials = () => {
+    setIsDialogAuthCredentials(false); // Cierra el diálogo
   };
 
-  // const handleCancelDialogNoService = () => {
-  //   // Aquí la funcionalidad de cancelar/no
-  //   setIsDialogNoServiceOpen(false); // Cierra el diálogo
-  // };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    //setIsDialogAuthCredentials(true);
+    // Validaciones
+
+    const result = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    });
+    console.log("-----------", result);
+
+    if (result?.error) {
+      setError(result.error);
+    } else {
+      router.push("/dashboard"); // Redirige al dashboard si el inicio de sesión es exitoso
+    }
+  };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -52,7 +63,7 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={(e) => e.preventDefault()}>
+          <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="email">Correo</Label>
@@ -60,7 +71,7 @@ export function LoginForm({
                   id="email"
                   type="email"
                   placeholder="usuario@example.com"
-                  required
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="grid gap-2">
@@ -73,20 +84,36 @@ export function LoginForm({
                     Forgot your password?
                   </a> */}
                 </div>
-                <Input id="password" type="password" required />
+                <Input
+                  id="password"
+                  type="password"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
               </div>
-              <Button
-                type="submit"
-                className="w-full"
-                onClick={() => setIsDialogNoServiceOpen(true)}
-              >
+              {error && <p style={{ color: "red" }}>{error}</p>}
+              <Button className="w-full" type="submit">
+                <UserRound className="mr-2 h-4 w-4" />
                 Iniciar sesión
               </Button>
             </div>
           </form>
+          {/* Start OR separator */}
+          <div className="my-3 inline-flex w-full items-center justify-center">
+            <hr className="my-4 h-px w-32 border-0 bg-gray-700/10 dark:bg-gray-100/10" />
+            <span className="min-w-10 bg-transparent px-3 text-sm font-medium text-gray-900 dark:text-white">
+              o
+            </span>
+            <hr className="my-4 h-px w-32 border-0 bg-gray-700/10 dark:bg-gray-100/10" />
+          </div>
+          {/* End OR separator */}
           <div className="flex flex-col gap-6">
-            <Label className="mt-6 text-center">----- o -----</Label>
-            <Button variant="outline" className="w-full">
+            {/* <Label className="mt-6 text-center">----- o -----</Label> */}
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+            >
+              <Mail className="mr-2 h-4 w-4" />
               Iniciar sesión con Google
             </Button>
             <Button
@@ -94,6 +121,7 @@ export function LoginForm({
               className="w-full"
               onClick={() => signIn("github", { callbackUrl: "/dashboard" })}
             >
+              <GitBranch className="mr-2 h-4 w-4" />
               Iniciar sesión con GitHub
             </Button>
             {/* <div className="mt-4 text-center text-sm">
@@ -105,30 +133,18 @@ export function LoginForm({
           </div>
         </CardContent>
       </Card>
-      {/* Alerta de mail sin funcionar aún */}
-      <AlertDialog
-        open={isDialogNoServiceOpen}
-        onOpenChange={setIsDialogNoServiceOpen}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              Esta opción aún no está habilitada.
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              Por el momento sólo podrá acceder con una cuenta de GitHub.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            {/* <AlertDialogCancel onClick={handleDialogMail}>
-                      Cancelar
-                    </AlertDialogCancel> */}
-            <AlertDialogAction onClick={handleConfirmDialogNoService}>
-              Confirmar
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+
+      {/* Mensaje de Credentials sin funcionar aún */}
+      <CustomAlertDialog
+        isOpen={isDialogAuthCredentials}
+        onOpenChange={setIsDialogAuthCredentials}
+        title="Esta opción aún no está habilitada."
+        description="Por el momento solo podrá acceder con cuentas de Google y GitHub."
+        onConfirm={handleConfirmDialogAuthCredentials}
+        //onCancel={handleCancelDialogAuthCredentials} // Pasa la función de cancelar
+        confirmText="Aceptar"
+        //cancelText="Cerrar" // Personaliza el texto del botón de cancelar
+      />
     </div>
   );
 }

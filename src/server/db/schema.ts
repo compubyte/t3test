@@ -31,13 +31,13 @@ export const posts = createTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-      () => new Date()
+      () => new Date(),
     ),
   },
   (example) => ({
     createdByIdIdx: index("created_by_idx").on(example.createdById),
     nameIndex: index("name_idx").on(example.name),
-  })
+  }),
 );
 
 export const users = createTable("user", {
@@ -47,6 +47,7 @@ export const users = createTable("user", {
     .$defaultFn(() => crypto.randomUUID()),
   name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }).notNull(),
+  password: varchar("password", { length: 255 }).notNull().default("1234"),
   emailVerified: timestamp("email_verified", {
     mode: "date",
     withTimezone: true,
@@ -84,7 +85,7 @@ export const accounts = createTable(
       columns: [account.provider, account.providerAccountId],
     }),
     userIdIdx: index("account_user_id_idx").on(account.userId),
-  })
+  }),
 );
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
@@ -107,7 +108,7 @@ export const sessions = createTable(
   },
   (session) => ({
     userIdIdx: index("session_user_id_idx").on(session.userId),
-  })
+  }),
 );
 
 export const sessionsRelations = relations(sessions, ({ one }) => ({
@@ -126,7 +127,7 @@ export const verificationTokens = createTable(
   },
   (vt) => ({
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
-  })
+  }),
 );
 
 // Tabla de Categorías
@@ -140,6 +141,10 @@ export const tablaProductos = createTable("productos", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   nombre: varchar("nombre", { length: 255 }).notNull(),
   precioUnitario: numeric("precioUnitario").notNull(),
-  inventario: numeric("inventario").default(sql`0`).notNull(),
-  categoriaId: integer("categoriaId").notNull().references(() => tablaCategorias.id), // Relación con la tabla categorias
+  inventario: numeric("inventario")
+    .default(sql`0`)
+    .notNull(),
+  categoriaId: integer("categoriaId")
+    .notNull()
+    .references(() => tablaCategorias.id), // Relación con la tabla categorias
 });

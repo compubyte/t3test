@@ -1,0 +1,1 @@
+ALTER TABLE "t3test_user" ADD COLUMN "password" varchar(255) DEFAULT '1234' NOT NULL;
