@@ -28,7 +28,6 @@ export const RowClickProvider = ({ children }: { children: ReactNode }) => {
   // Función para manejar el clic en una fila
   const handleRowClick = useCallback((id: number) => {
     setSelectedRow(id); // Actualiza el estado de la fila seleccionada
-    console.log("Row clicked:", id);
   }, []);
 
   // Valor que se pasa a través del contexto

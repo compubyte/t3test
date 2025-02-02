@@ -11,10 +11,25 @@ import {
   ChevronUp,
   SquareChartGantt,
 } from "lucide-react";
+import CustomAlertDialog from "./CustomAlertDialog";
 
-export default function BotonesAcordeon() {
+interface ActionsCardProps {
+  selectedRow: number | null;
+  onSelectedRowChange: (id: number | null) => void;
+}
+
+export default function BotonesAcordeon({
+  selectedRow,
+  onSelectedRowChange,
+}: ActionsCardProps) {
   // Estado para controlar si el acordeón está abierto
   const [isOpen, setIsOpen] = useState(false);
+  // Alerts Dialogs
+  const [isDialogNoIdSelected, setIsDialogNoIdSelected] = useState(false);
+
+  const handleConfirmDialogNoIdSelected = () => {
+    setIsDialogNoIdSelected(false); // Cierra el diálogo
+  };
 
   // Función para alternar el acordeón
   const toggleAcordeon = () => {
@@ -35,9 +50,15 @@ export default function BotonesAcordeon() {
         break;
       case "Eliminar":
         console.log("Opción seleccionada: Eliminar");
+        if (!selectedRow) {
+          setIsDialogNoIdSelected(true);
+        } else {
+          console.log("ELIMINO ???");
+        }
         break;
       case "Recargar":
         console.log("Opción seleccionada: Recargar");
+        onSelectedRowChange(null);
         break;
       default:
         console.log("Opción no reconocida");
@@ -107,6 +128,18 @@ export default function BotonesAcordeon() {
           Recargar
         </Button>
       </div>
+
+      {/* AlertDialog: elemento no seleccionado */}
+      <CustomAlertDialog
+        isOpen={isDialogNoIdSelected}
+        onOpenChange={setIsDialogNoIdSelected}
+        title="No ha seleccionado ningún elemento de la lista."
+        description="Esta acción no puede procesarse sin seleccionar algún elemento."
+        onConfirm={handleConfirmDialogNoIdSelected}
+        //onCancel={handleCancelDialogAuthCredentials} // Pasa la función de cancelar
+        confirmText="Aceptar"
+        //cancelText="Cerrar" // Personaliza el texto del botón de cancelar
+      />
     </div>
   );
 }

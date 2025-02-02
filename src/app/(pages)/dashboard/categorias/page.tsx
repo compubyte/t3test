@@ -1,13 +1,13 @@
 "use client";
 
 import { RowClickProvider } from "@/app/_components/_generics/RowClickProvider";
-import TablaCategorias from "@/app/_components/categorias/TablaCategorias";
+import ListadoCategorias from "@/app/_components/categorias/ListadoCategorias";
 import ErrorBoundary from "@/app/_components/ErrorBoundary";
 import { LoadingSpinner } from "@/app/_components/_generics/LoadingSpinner";
 import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/react";
-import Link from "next/link";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
+import WindowTitleBar from "@/app/_components/_generics/WindowsTitleBar";
 
 export default function Categorias() {
   const [listaCategorias, { refetch }] =
@@ -30,16 +30,16 @@ export default function Categorias() {
           <RowClickProvider>
             <div className="temas mb-4 flex items-center justify-normal space-x-4">
               <div className="temas-contenedor m-auto w-10/12 rounded border-2 p-4 shadow">
-                <TablaCategorias listaCategorias={listaCategorias} />
+                <WindowTitleBar title="Manejo de categorías" />
+                <ListadoCategorias listaCategorias={listaCategorias} />
               </div>
             </div>
           </RowClickProvider>
         </Suspense>
       </ErrorBoundary>
+
       {/* Butones */}
-      <Button asChild>
-        <Link href="/dashboard">Volver</Link>
-      </Button>
+
       <Button onClick={handleRecargarLista}>Recargar datos</Button>
     </>
   );

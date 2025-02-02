@@ -15,7 +15,7 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import CustomAlertDialog from "../_generics/CustomAlertDialog";
-import { GitBranch, Mail, SquareUserRound, UserRound } from "lucide-react";
+import { GitBranch, Mail, UserRound } from "lucide-react";
 
 export function LoginForm({
   className,
