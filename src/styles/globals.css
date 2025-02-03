@@ -72,3 +72,7 @@
 .temas-contenedor {
   @apply bg-gray-400 dark:bg-gray-700;
 }
+
+.texto-con-sangria {
+  text-indent: 2rem;
+}

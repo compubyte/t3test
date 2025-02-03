@@ -15,13 +15,9 @@ import CustomAlertDialog from "./CustomAlertDialog";
 
 interface ActionsCardProps {
   selectedRow: number | null;
-  onSelectedRowChange: (id: number | null) => void;
 }
 
-export default function BotonesAcordeon({
-  selectedRow,
-  onSelectedRowChange,
-}: ActionsCardProps) {
+export default function BotonesAcordeon({ selectedRow }: ActionsCardProps) {
   // Estado para controlar si el acordeón está abierto
   const [isOpen, setIsOpen] = useState(false);
   // Alerts Dialogs
@@ -58,7 +54,6 @@ export default function BotonesAcordeon({
         break;
       case "Recargar":
         console.log("Opción seleccionada: Recargar");
-        onSelectedRowChange(null);
         break;
       default:
         console.log("Opción no reconocida");

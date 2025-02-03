@@ -15,15 +15,10 @@ import { ArrowDownAZ, ArrowUpZA, FilterX, ListOrdered } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import Paginator from "../_generics/Paginator";
 import ActionsCard from "../_generics/ActionsCard";
-
-interface Model {
-  id: number;
-  nombre: string;
-}
-
-interface TablaCategoriasProps {
-  listaCategorias: Model[];
-}
+import { useCategoryContext } from "@/app/(contexts)/CategoriasContext";
+import { Categoria } from "@/server/models/modelos";
+import { useSession } from "next-auth/react";
+import { LoadingSpinner } from "../_generics/LoadingSpinner";
 
 interface Column {
   key: "id" | "nombre";
@@ -35,35 +30,38 @@ const columns: Column[] = [
   { key: "nombre", label: "Nombre" },
 ];
 
-export default function ListadoCategorias({
-  listaCategorias,
-}: TablaCategoriasProps) {
+export default function ListadoCategorias() {
+  const { data: session, status } = useSession(); // Se usa aquí o no ????????
+  const { listaCategorias, setSelectedCategoria, selectedCategoria } =
+    useCategoryContext();
   const [filteredData, setFilteredData] = useState(listaCategorias);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [filter, setFilter] = useState("");
   const [sortColumn, setSortColumn] = useState<string | null>();
   const [sortDirection, setSortDirection] = useState<string | null>();
-  const [selectedRow, setSelectedRow] = useState<number | null>(null);
 
-  const handleSelectedRowChange = (id: number | null) => {
-    setSelectedRow(id);
+  if (status === "loading") return <LoadingSpinner />;
+
+  const handleRowClick = (item: Categoria | null) => {
+    // Elegirlo 2 veces anula selección
+    setSelectedCategoria(selectedCategoria?.id === item?.id ? null : item);
   };
 
   const handleFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.toLowerCase();
+    const value = e.target.value.toUpperCase();
     setFilter(value);
     const filtered = listaCategorias.filter(
       (item) =>
         item.id.toString().includes(value) ||
-        item.nombre.toLowerCase().includes(value),
+        item.nombre.toUpperCase().includes(value),
     );
     setFilteredData(filtered);
     setCurrentPage(1);
-    setSelectedRow(0);
+    setSelectedCategoria(null);
   };
 
-  const handleSort = (columnKey: keyof Model) => {
+  const handleSort = (columnKey: keyof Categoria) => {
     if (sortColumn === columnKey) {
       if (sortDirection === "asc") {
         setSortDirection("desc");
@@ -75,16 +73,19 @@ export default function ListadoCategorias({
       setSortColumn(columnKey);
       setSortDirection("asc");
     }
+    setSelectedCategoria(null);
   };
 
-  const sortedData = (sortColumn as keyof Model)
+  const sortedData = (sortColumn as keyof Categoria)
     ? [...filteredData].sort((a, b) => {
         if (sortDirection === "asc") {
-          return a[sortColumn as keyof Model] > b[sortColumn as keyof Model]
+          return a[sortColumn as keyof Categoria] >
+            b[sortColumn as keyof Categoria]
             ? 1
             : -1;
         } else {
-          return a[sortColumn as keyof Model] < b[sortColumn as keyof Model]
+          return a[sortColumn as keyof Categoria] <
+            b[sortColumn as keyof Categoria]
             ? 1
             : -1;
         }
@@ -97,15 +98,13 @@ export default function ListadoCategorias({
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+    setSelectedCategoria(null);
   };
 
   const handlePageSizeChange = (size: number) => {
     setPageSize(size);
     setCurrentPage(1);
-  };
-
-  const handleRowClick = (id: number) => {
-    setSelectedRow(id === selectedRow ? null : id);
+    setSelectedCategoria(null);
   };
 
   const handleClearFilter = () => {
@@ -113,7 +112,7 @@ export default function ListadoCategorias({
       setFilter("");
       setFilteredData(listaCategorias);
       setCurrentPage(1);
-      setSelectedRow(0);
+      setSelectedCategoria(null);
     }
   };
 
@@ -121,18 +120,15 @@ export default function ListadoCategorias({
     <div className="space-y-3">
       <div className="flex w-full items-center">
         <Card className="temas-contenedor ml-auto flex w-full flex-wrap items-center gap-2 p-3 shadow-lg">
-          Id seleccionado: {selectedRow}
+          Id seleccionado: {selectedCategoria?.id} - {selectedCategoria?.nombre}
           {/* Componente ActionsCard */}
-          <ActionsCard
-            selectedRow={selectedRow}
-            onSelectedRowChange={handleSelectedRowChange}
-          />
-          <div>
+          <ActionsCard selectedRow={selectedCategoria?.id ?? null} />
+          <div className="flex w-full min-w-[50%] items-center gap-2">
             <Input
               placeholder="Filtrar categorías..."
               value={filter}
               onChange={handleFilter}
-              className="temas max-w-lg"
+              className="max-w-lg flex-1"
             />
             <Button
               variant="outline"
@@ -177,8 +173,9 @@ export default function ListadoCategorias({
               {paginatedData.map((item) => (
                 <TableRow
                   key={item.id}
-                  className={`cursor-pointer ${selectedRow === item.id ? "bg-muted" : ""} text-base`}
-                  onClick={() => handleRowClick(item.id)}
+                  //className={`cursor-pointer ${selectedRow === item.id ? "bg-muted" : ""} text-base`}
+                  className={`cursor-pointer ${selectedCategoria?.id === item.id ? "bg-muted" : ""} text-base`}
+                  onClick={() => handleRowClick(item)}
                 >
                   <TableCell>{item.id}</TableCell>
                   <TableCell>{item.nombre}</TableCell>

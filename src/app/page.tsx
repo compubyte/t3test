@@ -26,21 +26,25 @@ export default async function Home() {
           {/* Contenido principal de la mitad izquierda */}
           <div className="flex flex-1 flex-col items-center justify-center">
             <div className="max-w-lg">
-              <h1 className="mb-4 text-4xl font-bold">
+              <h1 className="mb-4 text-center text-4xl font-bold">
                 Bienvenido a T3 Test App
               </h1>
-              <p className="text-lg text-gray-800">
+              <p className="texto-con-sangria mb-3 text-justify text-lg text-gray-800">
                 Este desarrollo es un ejemplo de la utilización de diferentes
-                tecnologías que se encuentran en el atack de T3.
+                tecnologías que se encuentran en el stack de T3.
               </p>
-              <p className="text-lg text-gray-800">
+              <p className="texto-con-sangria mb-3 text-justify text-lg text-gray-800">
                 T3 Test App está estilizado con Shadcn/ui y Tailwind CSS para
-                mantener un diseño limpio y responsivo.
+                mantener un diseño limpio, responsivo y con temas visuales.
               </p>
-              <p className="text-lg text-gray-800">
+              <p className="texto-con-sangria mb-3 text-justify text-lg text-gray-800">
                 El acceso a datos está orquestado con el ORM Drizzle y la
                 tecnología de APIs tipadas de tRPC. Además, se aplica
                 autenticación con NextAuth y protección de rutas.
+              </p>
+              <p className="texto-con-sangria mb-3 text-justify text-lg text-gray-800">
+                En cuanto a la lógica interna, utiliza contextos por áreas para
+                el manejo de los datos entre páginas y componentes relacionados.
               </p>
             </div>
           </div>
@@ -55,36 +59,6 @@ export default async function Home() {
           </div>
         </div>
       </div>
-
-      {/* <LoginForm />
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#c2d6be] to-[#667d66] text-black">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-          <h1 className="text-4xl font-extrabold tracking-tight sm:text-[3rem]">
-            Bienvenido a <span className="text-blue-500">T3Test</span> App
-          </h1>
-          <p className="text-center text-2xl sm:text-[2rem]">
-            {session
-              ? `Hola, ${session.user.name}`
-              : "Inicia sesión para continuar"}
-          </p>
-          <div className="flex space-x-4">
-            <Link
-              href={session ? "/api/auth/signout" : "/api/auth/signin"}
-              className="rounded-full bg-blue-200 px-10 py-3 font-semibold no-underline transition hover:bg-blue-300"
-            >
-              {session ? "Cerrar sesión" : "Login"}
-            </Link>
-            {session?.user && (
-              <Link
-                href="/dashboard"
-                className="rounded-full bg-violet-200 px-10 py-3 font-semibold no-underline transition hover:bg-violet-300"
-              >
-                Volver al dashboard
-              </Link>
-            )}
-          </div>
-        </div>
-      </main> */}
     </HydrateClient>
   );
 }
