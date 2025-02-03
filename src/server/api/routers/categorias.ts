@@ -3,7 +3,7 @@ import {
   //protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
-import { z } from "zod";
+//import { z } from "zod";
 
 // export const categoriasRouter = createTRPCRouter({
 //   getList: publicProcedure.query(async ({ ctx }) => {

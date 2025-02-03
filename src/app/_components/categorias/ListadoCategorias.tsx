@@ -17,7 +17,7 @@ import Paginator from "../_generics/Paginator";
 import ActionsCard from "../_generics/ActionsCard";
 import { useCategoryContext } from "@/app/(contexts)/CategoriasContext";
 import { Categoria } from "@/server/models/modelos";
-import { useSession } from "next-auth/react";
+//import { useSession } from "next-auth/react";
 import { LoadingSpinner } from "../_generics/LoadingSpinner";
 
 interface Column {
@@ -31,7 +31,7 @@ const columns: Column[] = [
 ];
 
 export default function ListadoCategorias() {
-  const { data: session, status } = useSession(); // Se usa aquí o no ????????
+  //const { data: session, status } = useSession(); // Se usa aquí o no ????????
   const { listaCategorias, setSelectedCategoria, selectedCategoria } =
     useCategoryContext();
   const [filteredData, setFilteredData] = useState(listaCategorias);

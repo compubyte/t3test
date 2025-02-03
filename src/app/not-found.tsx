@@ -13,7 +13,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react"; // Importa useSession
 
 export default function Custom404() {
-  const { data: session, status } = useSession(); // Obtén la sesión y su estado
+  const { data: session } = useSession(); // Obtén la sesión y su estado
 
   // Define la ruta a la que redirigir
   const redirectPath = session ? "/dashboard" : "/";
