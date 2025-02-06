@@ -16,7 +16,7 @@ import { Card } from "@/components/ui/card";
 import Paginator from "../_generics/Paginator";
 import ActionsCard from "../_generics/ActionsCard";
 import { useCategoryContext } from "@/app/(contexts)/CategoriasContext";
-import { Categoria } from "@/server/models/modelos";
+import type { Categoria } from "@/server/models/modelos";
 // import { useSession } from "next-auth/react";
 // import { LoadingSpinner } from "../_generics/LoadingSpinner";
 

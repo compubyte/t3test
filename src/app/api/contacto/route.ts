@@ -1,9 +1,14 @@
 import { NextResponse } from "next/server";
 import { sendEmail } from "@/lib/mailer";
-import { useSession } from "next-auth/react";
+
+interface RequestBody {
+  name: string;
+  email: string;
+  mensaje: string;
+}
 
 export async function POST(request: Request) {
-  const { name, email, mensaje } = await request.json(); // Obtiene el mensaje
+  const { name, email, mensaje }: RequestBody = await request.json(); // Obtiene el mensaje
   try {
     const subject = "Nuevo mensaje de contacto";
     const html = `
@@ -29,6 +34,7 @@ export async function POST(request: Request) {
       );
     }
   } catch (error) {
+    console.error("Error al enviar el mensaje.", error);
     return NextResponse.json(
       { message: "Error al enviar el mensaje" },
       { status: 500 },

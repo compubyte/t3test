@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState } from "react";
 import { api } from "@/trpc/react"; // Importa la API tRPC
-import { Categoria } from "@/server/models/modelos";
+import type { Categoria } from "@/server/models/modelos";
 
 interface CategoriasContextProps {
   listaCategorias: Categoria[];
@@ -34,13 +34,17 @@ export function CategoriasProvider({
     null,
   );
 
+  const refetchCategorias = () => {
+    refetch();
+  };
+
   return (
     <CategoriasContext.Provider
       value={{
         listaCategorias: listaCategorias ?? [],
         selectedCategoria,
         setSelectedCategoria,
-        refetchCategorias: refetch,
+        refetchCategorias,
       }}
     >
       {children}

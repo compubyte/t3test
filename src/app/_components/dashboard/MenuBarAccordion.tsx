@@ -17,14 +17,11 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import {
-  Cog,
-  FileIcon,
   FileSpreadsheet,
   FolderCog,
   FolderGit2,
   FolderSymlink,
   Handshake,
-  LayoutDashboard,
   LogOut,
   MapPin,
   Menu,
@@ -55,8 +52,8 @@ export function MenuBarAccordion() {
   const [accordionValues, setAccordionValues] = useState<string[]>([]);
 
   // Función para manejar la navegación y cerrar el Accordion
-  const handleAction = (action: () => void) => {
-    action(); // Ejecuta la acción (navegación, cambio de tema, etc.)
+  const handleAction = (action: () => void | Promise<void>) => {
+    void action(); // Ejecuta la acción (navegación, cambio de tema, etc.)
     setAccordionValues([]); // Cierra todos los ítems del Accordion
     setIsSheetOpen(false); // Cierra el menú
   };

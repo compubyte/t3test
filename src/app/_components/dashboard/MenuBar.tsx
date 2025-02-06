@@ -33,7 +33,6 @@ import {
   Forklift,
   HandCoins,
   Handshake,
-  Inbox,
   Info,
   LogOut,
   MapPin,

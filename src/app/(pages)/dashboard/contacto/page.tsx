@@ -38,15 +38,13 @@ export default function Contacto() {
     setIsDialogSendMessage(true);
   };
 
-  const handleConfirmDialogSendMessage = () => {
+  const handleConfirmDialogSendMessage = async () => {
     setIsLoading(true); // Activa el estado de carga
-    SendMail();
+    await SendMail();
   };
 
   const SendMail = async () => {
     try {
-      console.log("Intento");
-
       const response = await fetch("../api/contacto", {
         method: "POST",
         headers: {
@@ -58,7 +56,6 @@ export default function Contacto() {
           mensaje,
         }),
       });
-      console.log("Pasó", response);
       if (response.ok) {
         CustomToasterSuccess("El mensaje fue enviado correctamente.");
         setMensaje(""); // Limpia el campo del mensaje
@@ -67,6 +64,7 @@ export default function Contacto() {
       }
     } catch (error) {
       CustomToasterError("Hubo un error al enviar el mensaje.");
+      console.error("Hubo un error al enviar el mensaje.", error);
     } finally {
       setIsLoading(false); // Desactiva el estado de carga
       setIsDialogSendMessage(false); // Cierra el diálogo

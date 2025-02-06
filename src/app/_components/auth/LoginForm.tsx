@@ -44,7 +44,7 @@ export function LoginForm({
     try {
       await signIn("github", { callbackUrl: "/dashboard" });
     } catch (error) {
-      //console.error("Error al iniciar sesión:", error);
+      console.error("Error al iniciar sesión:", error);
       setIsDialogAuthCredentials(true);
       setLoading(false);
     }
@@ -55,7 +55,7 @@ export function LoginForm({
     try {
       await signIn("google", { callbackUrl: "/dashboard" });
     } catch (error) {
-      //console.error("Error al iniciar sesión:", error);
+      console.error("Error al iniciar sesión:", error);
       setIsDialogAuthCredentials(true);
       setLoading(false);
     }
