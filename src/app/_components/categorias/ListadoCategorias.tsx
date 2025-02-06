@@ -17,8 +17,8 @@ import Paginator from "../_generics/Paginator";
 import ActionsCard from "../_generics/ActionsCard";
 import { useCategoryContext } from "@/app/(contexts)/CategoriasContext";
 import { Categoria } from "@/server/models/modelos";
-//import { useSession } from "next-auth/react";
-import { LoadingSpinner } from "../_generics/LoadingSpinner";
+// import { useSession } from "next-auth/react";
+// import { LoadingSpinner } from "../_generics/LoadingSpinner";
 
 interface Column {
   key: "id" | "nombre";
@@ -41,7 +41,7 @@ export default function ListadoCategorias() {
   const [sortColumn, setSortColumn] = useState<string | null>();
   const [sortDirection, setSortDirection] = useState<string | null>();
 
-  if (status === "loading") return <LoadingSpinner />;
+  //if (status === "loading") return <LoadingSpinner />;
 
   const handleRowClick = (item: Categoria | null) => {
     // Elegirlo 2 veces anula selección

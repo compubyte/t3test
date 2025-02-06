@@ -15,7 +15,7 @@ export default function WindowTitleBar({ title }: WindowsTitleBarProps) {
     <div className="temas -mt-1 mb-2 flex h-8 w-full border-spacing-1 items-center rounded-sm border border-gray-700 px-2 dark:border-gray-400">
       {/* Título de la página */}
       <div className="flex-1">
-        <span className="text-lg font-bold">{title}</span>
+        <span className="text-xl font-bold">{title}</span>
       </div>
 
       {/* Botón de cerrar (X) */}

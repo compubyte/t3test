@@ -76,3 +76,11 @@
 .texto-con-sangria {
   text-indent: 2rem;
 }
+
+.icono-menu-main {
+  @apply mr-2 h-5 w-5
+}
+
+.icono-menu {
+  @apply mr-2 h-6 w-6
+}

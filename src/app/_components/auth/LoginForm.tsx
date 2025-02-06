@@ -15,7 +15,8 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import CustomAlertDialog from "../_generics/CustomAlertDialog";
-import { GitBranch, Mail, UserRound } from "lucide-react";
+import { GitBranch, Mail, UserRound, Eye, EyeClosed } from "lucide-react";
+import { LoadingSpinner } from "../_generics/LoadingSpinner";
 
 export function LoginForm({
   className,
@@ -24,33 +25,57 @@ export function LoginForm({
   // Hooks para Credentials
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
   const [error, setError] = useState("");
-  // Hook para AlertMail
+  // Hook para AlertDialogAuthCredentials
   const [isDialogAuthCredentials, setIsDialogAuthCredentials] = useState(false);
+  // Loading
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
   const handleConfirmDialogAuthCredentials = () => {
+    setLoading(false);
     setIsDialogAuthCredentials(false); // Cierra el diálogo
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    //setIsDialogAuthCredentials(true);
-    // Validaciones
+  const handleSignInGitHub = async () => {
+    setLoading(true);
+    try {
+      await signIn("github", { callbackUrl: "/dashboard" });
+    } catch (error) {
+      //console.error("Error al iniciar sesión:", error);
+      setIsDialogAuthCredentials(true);
+      setLoading(false);
+    }
+  };
 
+  const handleSignInGoogle = async () => {
+    setLoading(true);
+    try {
+      await signIn("google", { callbackUrl: "/dashboard" });
+    } catch (error) {
+      //console.error("Error al iniciar sesión:", error);
+      setIsDialogAuthCredentials(true);
+      setLoading(false);
+    }
+  };
+
+  const handleSignInCredentials = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
     const result = await signIn("credentials", {
       redirect: false,
       email,
       password,
     });
-    console.log("-----------", result);
-
     if (result?.error) {
       setError(result.error);
     } else {
       router.push("/dashboard"); // Redirige al dashboard si el inicio de sesión es exitoso
     }
+    setLoading(false);
   };
 
   return (
@@ -63,7 +88,12 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit}>
+          {/* OJO CON MENSAJE PROVISORIO */}
+          <p className="text-red-600">
+            Por ahora está dejando pasar cualquier mail y contraseña
+          </p>
+          {/* OJO CON MENSAJE PROVISORIO */}
+          <form onSubmit={handleSignInCredentials}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="email">Correo</Label>
@@ -71,27 +101,46 @@ export function LoginForm({
                   id="email"
                   type="email"
                   placeholder="usuario@example.com"
+                  required
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
                   <Label htmlFor="password">Contraseña</Label>
-                  {/* <a
+                  <a
                     href="#"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                   >
-                    Forgot your password?
-                  </a> */}
+                    ¿Olvidó su contraseña?
+                  </a>
                 </div>
-                <Input
-                  id="password"
-                  type="password"
-                  onChange={(e) => setPassword(e.target.value)}
-                />
+                <div className="flex items-center">
+                  <Input
+                    id="password"
+                    type={isVisible ? "text" : "password"}
+                    required
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <Button
+                    variant="outline"
+                    type="button"
+                    className="ml-2 flex items-center px-2"
+                    onMouseDown={() => setIsVisible(true)}
+                    onMouseUp={() => setIsVisible(false)}
+                    onMouseLeave={() => setIsVisible(false)}
+                  >
+                    {isVisible ? <Eye size={20} /> : <EyeClosed size={20} />}
+                  </Button>
+                </div>
               </div>
-              {error && <p style={{ color: "red" }}>{error}</p>}
-              <Button className="w-full" type="submit">
+              {error && <p className="text-red-500">{error}</p>}
+              <Button
+                variant="outline"
+                className="w-full bg-slate-700 text-base text-white hover:bg-black hover:text-white"
+                type="submit"
+                disabled={loading}
+              >
                 <UserRound className="mr-2 h-4 w-4" />
                 Iniciar sesión
               </Button>
@@ -108,18 +157,22 @@ export function LoginForm({
           {/* End OR separator */}
           <div className="flex flex-col gap-6">
             {/* <Label className="mt-6 text-center">----- o -----</Label> */}
+            {/* GOOGLE ----------------------------------------- */}
             <Button
               variant="outline"
-              className="w-full"
-              onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+              className="w-full bg-slate-400 text-base hover:bg-black hover:text-white"
+              onClick={handleSignInGoogle}
+              disabled={loading}
             >
               <Mail className="mr-2 h-4 w-4" />
               Iniciar sesión con Google
             </Button>
+            {/* GITHUB ----------------------------------------- */}
             <Button
               variant="outline"
-              className="w-full"
-              onClick={() => signIn("github", { callbackUrl: "/dashboard" })}
+              className="w-full bg-slate-400 text-base hover:bg-black hover:text-white"
+              onClick={handleSignInGitHub}
+              disabled={loading}
             >
               <GitBranch className="mr-2 h-4 w-4" />
               Iniciar sesión con GitHub
@@ -131,6 +184,7 @@ export function LoginForm({
               </a>
             </div> */}
           </div>
+          {loading && <LoadingSpinner />}
         </CardContent>
       </Card>
 
@@ -138,8 +192,8 @@ export function LoginForm({
       <CustomAlertDialog
         isOpen={isDialogAuthCredentials}
         onOpenChange={setIsDialogAuthCredentials}
-        title="Esta opción aún no está habilitada."
-        description="Por el momento solo podrá acceder con cuentas de Google y GitHub."
+        title="Error al iniciar sesión."
+        description="Asegúrese de que sus credenciales sean correctas y reintente."
         onConfirm={handleConfirmDialogAuthCredentials}
         //onCancel={handleCancelDialogAuthCredentials} // Pasa la función de cancelar
         confirmText="Aceptar"

@@ -1,5 +1,5 @@
-import { InferSelectModel, InferInsertModel } from "drizzle-orm";
-import { tablaCategorias } from "@/server/db/schema";
+import type { InferSelectModel, InferInsertModel } from "drizzle-orm";
+import type { tablaCategorias } from "@/server/db/schema";
 
 // Modelo para SELECT (datos completos)
 export type Categoria = InferSelectModel<typeof tablaCategorias>;

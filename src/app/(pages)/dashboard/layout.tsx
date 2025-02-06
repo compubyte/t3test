@@ -4,6 +4,7 @@ import { MenuBar } from "@/app/_components/dashboard/MenuBar";
 import { ThemeProvider } from "@/app/_components/dashboard/ThemeProvider";
 import { ModeToggle } from "@/app/_components/dashboard/ModeToogle";
 import { UserInfo } from "@/app/_components/dashboard/UserInfo";
+import { Toaster } from "sonner";
 
 export default function RootLayout({
   children,
@@ -27,8 +28,9 @@ export default function RootLayout({
             <ModeToggle />
           </div>
         </div>
-
         {children}
+        <Toaster position="bottom-right" richColors />{" "}
+        {/* Renderiza el Toaster */}
       </ThemeProvider>
     </ProtectedRoute>
   );
