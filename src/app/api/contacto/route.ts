@@ -1,14 +1,19 @@
 import { NextResponse } from "next/server";
 import { sendEmail } from "@/lib/mailer";
+import { z } from "zod";
 
-interface RequestBody {
-  name: string;
-  email: string;
-  mensaje: string;
-}
+// Define un esquema de validación
+const RequestBodySchema = z.object({
+  name: z.string(),
+  email: z.string().email(),
+  mensaje: z.string(),
+});
 
 export async function POST(request: Request) {
-  const { name, email, mensaje }: RequestBody = await request.json(); // Obtiene el mensaje
+  // Valida los datos
+  const parsedData = RequestBodySchema.parse(await request.json());
+  const { name, email, mensaje } = parsedData;
+  //const { name, email, mensaje }: RequestBody = await request.json(); // Obtiene el mensaje
   try {
     const subject = "Nuevo mensaje de contacto";
     const html = `
