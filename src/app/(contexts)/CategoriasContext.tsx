@@ -34,8 +34,8 @@ export function CategoriasProvider({
     null,
   );
 
-  const refetchCategorias = () => {
-    refetch();
+  const refetchCategorias = async () => {
+    await refetch();
   };
 
   return (
