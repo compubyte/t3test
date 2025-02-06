@@ -8,7 +8,7 @@ interface CategoriasContextProps {
   listaCategorias: Categoria[];
   selectedCategoria: Categoria | null;
   setSelectedCategoria: (category: Categoria | null) => void;
-  refetchCategorias: () => void;
+  refetchCategorias: () => void | Promise<void>;
 }
 
 const CategoriasContext = createContext<CategoriasContextProps | undefined>(
