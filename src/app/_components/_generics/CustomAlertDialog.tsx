@@ -15,7 +15,7 @@ interface CustomAlertDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   title: string; // Título del diálogo
-  description: string; // Descripción del diálogo
+  description?: string; // Descripción del diálogo
   onCancel?: () => void; // Función que se ejecuta al cancelar (opcional)
   onConfirm: () => void; // Función que se ejecuta al confirmar
   confirmText?: string;
@@ -26,7 +26,7 @@ export default function CustomAlertDialog({
   isOpen,
   onOpenChange,
   title,
-  description,
+  description = "",
   onConfirm,
   onCancel,
   confirmText = "Aceptar",

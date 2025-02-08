@@ -19,7 +19,7 @@ import type { Categoria } from "@/server/models/modelos";
 import ActionsCrud from "../_generics/ActionsCrud";
 import FormCrudCategorias from "./FormCrudCategorias";
 import { CustomToasterValidation } from "../_generics/CustomToaster";
-import { api } from "@/trpc/react";
+// import { api } from "@/trpc/react";
 // import { useSession } from "next-auth/react";
 // import { LoadingSpinner } from "../_generics/LoadingSpinner";
 
@@ -54,11 +54,8 @@ export default function ListadoCategorias() {
   >("agregar");
 
   useEffect(() => {
-    // Solo actualizar filteredData si listaCategorias ha cambiado
-    if (JSON.stringify(listaCategorias) !== JSON.stringify(filteredData)) {
-      setFilteredData(listaCategorias);
-    }
-  }, [listaCategorias]); // Solo listaCategorias como dependencia
+    setFilteredData(listaCategorias);
+  }, [listaCategorias]);
 
   const handleAction = async (
     mode: "agregar" | "editar" | "detalle" | "eliminar" | "recargar",

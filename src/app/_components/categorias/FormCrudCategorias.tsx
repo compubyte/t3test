@@ -33,7 +33,7 @@ export default function FormCrudCategorias({
   const { selectedCategoria, refetchCategorias, setSelectedCategoria } =
     useCategoriaContext();
   const [title, setTitle] = useState(""); // Para el mensaje
-  const [description, setDescription] = useState(""); // Para el mensaje
+  //const [description, setDescription] = useState(""); // Para el mensaje
   const [isAlertDialog, setIsAlertDialog] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null); // Referencia al input
 
@@ -254,7 +254,7 @@ export default function FormCrudCategorias({
         isOpen={isAlertDialog}
         onOpenChange={setIsAlertDialog}
         title={title}
-        description={description}
+        //description={description}
         onConfirm={handleConfirmAlertDialog} // Pasar el argumento aquí
         onCancel={handleCancelAlertDialog} // Pasa la función de cancelar
         confirmText="Si"
