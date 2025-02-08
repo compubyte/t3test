@@ -11,7 +11,6 @@ import {
   ChevronUp,
   SquareChartGantt,
 } from "lucide-react";
-import { CustomToasterValidation } from "./CustomToaster";
 
 type Operacion = "agregar" | "editar" | "detalle" | "eliminar" | "recargar";
 
