@@ -29,9 +29,9 @@ export default function ActionsCrud({ onAction }: ActionsCrudProps) {
 
   const handleOptionClick = (operacion: Operacion) => {
     onAction(operacion as Operacion);
-    if (isOpenAcordeon) {
-      setIsOpenAcordeon(false); // Cierra el acordeón al hacer clic en una opción
-    }
+    // if (isOpenAcordeon) {
+    //   setIsOpenAcordeon(false); // Cierra el acordeón al hacer clic en una opción
+    // }
   };
 
   return (

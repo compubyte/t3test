@@ -38,11 +38,8 @@ export default function FormCrudCategorias({
   const inputRef = useRef<HTMLInputElement>(null); // Referencia al input
 
   // Manejo de mayúsculas en Inputs. Guarda posición del cursor
-  const handleChangeInput = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    input: string,
-  ) => {
-    const { value, selectionStart, selectionEnd } = e.target;
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, selectionStart } = e.target;
     // Guarda la posición del cursor antes de actualizar el valor
     const cursorPosition = selectionStart;
     // Convierte el texto a mayúsculas
@@ -218,7 +215,7 @@ export default function FormCrudCategorias({
                 type="text"
                 name="nombre"
                 value={nombre}
-                onChange={(e) => handleChangeInput(e, "nombre")}
+                onChange={handleChangeInput}
                 //onChange={(e) => setNombre(e.target.value.toUpperCase())}
                 className="w-full rounded border p-2"
                 disabled={mode === "detalle" || mode === "eliminar"}
