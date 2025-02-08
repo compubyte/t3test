@@ -23,7 +23,6 @@ export default function WindowTitleBar({ title }: WindowsTitleBarProps) {
         className="flex h-6 w-6 items-center justify-center rounded-sm bg-gray-500 hover:bg-red-400 hover:text-white"
         aria-label="Cerrar"
         onClick={() => router.push("/dashboard")}
-        //onClick={() => setIsDialogVolverAlMenu(true)}
       >
         <X className="h-4 w-4" />
       </Button>

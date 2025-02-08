@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -14,9 +14,12 @@ import { Button } from "@/components/ui/button";
 import { ArrowDownAZ, ArrowUpZA, FilterX, ListOrdered } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import Paginator from "../_generics/Paginator";
-import ActionsCard from "../_generics/ActionsCard";
-import { useCategoryContext } from "@/app/(contexts)/CategoriasContext";
+import { useCategoriaContext } from "@/app/(contexts)/CategoriasContext";
 import type { Categoria } from "@/server/models/modelos";
+import ActionsCrud from "../_generics/ActionsCrud";
+import FormCrudCategorias from "./FormCrudCategorias";
+import { CustomToasterValidation } from "../_generics/CustomToaster";
+import { api } from "@/trpc/react";
 // import { useSession } from "next-auth/react";
 // import { LoadingSpinner } from "../_generics/LoadingSpinner";
 
@@ -32,19 +35,76 @@ const columns: Column[] = [
 
 export default function ListadoCategorias() {
   //const { data: session, status } = useSession(); // Se usa aquí o no ????????
-  const { listaCategorias, setSelectedCategoria, selectedCategoria } =
-    useCategoryContext();
+  const {
+    listaCategorias,
+    setSelectedCategoria,
+    selectedCategoria,
+    refetchCategorias,
+  } = useCategoriaContext();
   const [filteredData, setFilteredData] = useState(listaCategorias);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [filter, setFilter] = useState("");
   const [sortColumn, setSortColumn] = useState<string | null>();
   const [sortDirection, setSortDirection] = useState<string | null>();
+  // para el Dialog
+  const [dialogCrudOpen, setDialogCrudOpen] = useState(false);
+  const [dialogCrudMode, setDialogCrudMode] = useState<
+    "agregar" | "editar" | "detalle" | "eliminar" | "recargar"
+  >("agregar");
+
+  useEffect(() => {
+    // Solo actualizar filteredData si listaCategorias ha cambiado
+    if (JSON.stringify(listaCategorias) !== JSON.stringify(filteredData)) {
+      setFilteredData(listaCategorias);
+    }
+  }, [listaCategorias]); // Solo listaCategorias como dependencia
+
+  const handleAction = async (
+    mode: "agregar" | "editar" | "detalle" | "eliminar" | "recargar",
+  ) => {
+    // Validación inicial
+    if (
+      !selectedCategoria &&
+      (mode === "editar" || mode === "detalle" || mode === "eliminar")
+    ) {
+      CustomToasterValidation(
+        "No ha seleccionado ningún elemento de la lista.",
+      );
+      return;
+    }
+
+    // Actualización del estado según el modo
+    switch (mode) {
+      case "agregar":
+        handleRowClick(null); // Deseleccionar categoría
+        setSelectedCategoria(null);
+        setDialogCrudMode(mode);
+        setDialogCrudOpen(true);
+        break;
+
+      case "editar":
+      case "detalle":
+      case "eliminar":
+        setDialogCrudMode(mode);
+        setDialogCrudOpen(true);
+        break;
+
+      case "recargar":
+        handleRowClick(null); // Deseleccionar categoría
+        setSelectedCategoria(null);
+        await refetchCategorias(); // Esperar a que se complete la recarga
+        break;
+
+      default:
+        break;
+    }
+  };
 
   //if (status === "loading") return <LoadingSpinner />;
 
   const handleRowClick = (item: Categoria | null) => {
-    // Elegirlo 2 veces anula selección
+    // Elegirlo 2 veces anula la selección
     setSelectedCategoria(selectedCategoria?.id === item?.id ? null : item);
   };
 
@@ -120,9 +180,11 @@ export default function ListadoCategorias() {
     <div className="space-y-3">
       <div className="flex w-full items-center">
         <Card className="temas-contenedor ml-auto flex w-full flex-wrap items-center gap-2 p-3 shadow-lg">
-          Id seleccionado: {selectedCategoria?.id} - {selectedCategoria?.nombre}
           {/* Componente ActionsCard */}
-          <ActionsCard selectedRow={selectedCategoria?.id ?? null} />
+          <ActionsCrud
+            selectedRow={selectedCategoria?.id ?? null}
+            onAction={handleAction}
+          />
           <div className="flex w-full min-w-[50%] items-center gap-2">
             <Input
               placeholder="Filtrar categorías..."
@@ -173,7 +235,6 @@ export default function ListadoCategorias() {
               {paginatedData.map((item) => (
                 <TableRow
                   key={item.id}
-                  //className={`cursor-pointer ${selectedRow === item.id ? "bg-muted" : ""} text-base`}
                   className={`cursor-pointer ${selectedCategoria?.id === item.id ? "bg-muted" : ""} text-base`}
                   onClick={() => handleRowClick(item)}
                 >
@@ -185,6 +246,7 @@ export default function ListadoCategorias() {
           </Table>
         </div>
       </div>
+
       {/* Componente Paginator */}
       <Paginator
         currentPage={currentPage}
@@ -193,6 +255,14 @@ export default function ListadoCategorias() {
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
         totalItems={filteredData.length}
+      />
+
+      {/* Dialog para agregar, editar, ver, eliminar o recargar categorías */}
+      <FormCrudCategorias
+        isOpen={dialogCrudOpen}
+        onClose={() => setDialogCrudOpen(false)}
+        mode={dialogCrudMode}
+        //categoria={selectedCategoria}
       />
     </div>
   );

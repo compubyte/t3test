@@ -52,7 +52,7 @@ export function CategoriasProvider({
   );
 }
 
-export function useCategoryContext() {
+export function useCategoriaContext() {
   const context = useContext(CategoriasContext);
   if (!context) {
     throw new Error(

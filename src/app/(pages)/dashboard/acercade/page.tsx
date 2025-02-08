@@ -14,20 +14,18 @@ export default function AcercaDe() {
       <div className="temas-contenedor m-auto w-10/12 rounded border-2 p-4 shadow">
         <WindowTitleBar title="Acerca de" />
         <div className="container mx-auto px-4 py-4">
-          <Card className="mx-auto max-w-4xl">
-            <CardHeader>
-              <CardTitle className="text-center text-3xl font-bold">
-                Acerca de T3Test App
-              </CardTitle>
-              <CardDescription className="mt-2 text-center text-base">
-                Una aplicación moderna construida con las mejores tecnologías
-                disponibles.
-              </CardDescription>
-            </CardHeader>
+          <Card className="temas-contenedor mx-auto min-h-96 max-w-3xl">
+            <div className="px-8 pb-2 pt-8 text-center text-2xl font-bold">
+              Acerca de T3Test App
+            </div>
+            <div className="px-10 pb-6 pt-1 text-center text-base">
+              Una aplicación moderna construida con las mejores tecnologías
+              disponibles.
+            </div>
             <CardContent className="space-y-4">
               <p className="texto-con-sangria text-justify text-lg">
                 T3Test App es una aplicación de ejemplo diseñada para demostrar
-                el uso de un stack tecnológico moderno y eficiente. A
+                el uso de T3, un stack tecnológico moderno y eficiente. A
                 continuación, se detallan algunas de las tecnologías clave
                 utilizadas en su desarrollo:
               </p>
@@ -102,9 +100,9 @@ export default function AcercaDe() {
               </div>
 
               <p className="texto-con-sangria text-justify text-lg">
-                Este stack tecnológico permite construir aplicaciones rápidas,
-                escalables y fáciles de mantener, siguiendo las mejores
-                prácticas de desarrollo moderno.
+                T3 stack permite construir aplicaciones rápidas, escalables y
+                fáciles de mantener, siguiendo las mejores prácticas de
+                desarrollo moderno.
               </p>
             </CardContent>
           </Card>

@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/app/_components/dashboard/ThemeProvider";
 import { ModeToggle } from "@/app/_components/dashboard/ModeToogle";
 import { UserInfo } from "@/app/_components/dashboard/UserInfo";
 import { Toaster } from "sonner";
+import Footer from "@/app/_components/_generics/Footer";
 
 export default function RootLayout({
   children,
@@ -29,6 +30,7 @@ export default function RootLayout({
           </div>
         </div>
         {children}
+        <Footer />
         <Toaster position="bottom-right" richColors />{" "}
         {/* Renderiza el Toaster */}
       </ThemeProvider>

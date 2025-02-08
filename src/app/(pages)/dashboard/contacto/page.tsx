@@ -76,16 +76,13 @@ export default function Contacto() {
       <div className="temas-contenedor m-auto w-10/12 rounded border-2 p-4 shadow">
         <WindowTitleBar title="Contacto" />
         <div className="container mx-auto px-4 py-8">
-          <Card className="mx-auto max-w-2xl">
-            <CardHeader>
-              <CardTitle className="text-center text-3xl font-bold">
-                Contacto
-              </CardTitle>
-              <CardDescription className="mt-2 text-center text-base">
-                ¿Necesitas ayuda? Envía un mensaje y te responderemos a tu
-                correo.
-              </CardDescription>
-            </CardHeader>
+          <Card className="temas-contenedor mx-auto min-h-96 max-w-3xl">
+            <div className="px-8 pb-2 pt-8 text-center text-2xl font-bold">
+              Formulario de contacto
+            </div>
+            <div className="px-10 pb-6 pt-1 text-center text-base">
+              ¿Necesitas ayuda? Envía un mensaje y te responderemos a tu correo.
+            </div>
             <CardContent>
               <form onSubmit={handleOnSubmit} className="space-y-4">
                 <div>
@@ -94,11 +91,11 @@ export default function Contacto() {
                     placeholder="Escribe tu mensaje aquí..."
                     value={mensaje}
                     onChange={(e) => setMensaje(e.target.value)}
-                    className="min-h-[150px]"
+                    className="min-h-[180px]"
                   />
                 </div>
-                <div className="flex justify-end">
-                  <Button type="submit" disabled={isLoading}>
+                <div className="flex justify-end pt-2">
+                  <Button type="submit" variant="outline" disabled={isLoading}>
                     {isLoading ? "Enviando..." : "Enviar mensaje"}
                   </Button>
                 </div>
