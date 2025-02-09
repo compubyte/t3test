@@ -4,7 +4,7 @@ import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
-import { eq } from "drizzle-orm/expressions";
+import { eq, and } from "drizzle-orm/expressions";
 import { db } from "@/server/db";
 import {
   accounts,
@@ -12,6 +12,7 @@ import {
   users,
   verificationTokens,
 } from "@/server/db/schema";
+import { string } from "zod";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -66,15 +67,18 @@ export const authConfig = {
           .where(eq(users.email, credentials.email as string))
           .limit(1);
         if (!user) {
-          throw new Error("Usuario no encontrado.");
+          throw new Error("Error en credenciales. Usuario no encontrado.");
+        }
+        if (typeof credentials.password !== "string") {
+          throw new Error("credentials.password debe ser una cadena de texto.");
         }
         // Verificar la contraseña
         const isValidPassword = await bcrypt.compare(
-          credentials.password.toString(),
-          user.password!,
+          credentials.password,
+          user.password,
         );
         if (!isValidPassword) {
-          throw new Error("Contraseña incorrecta.");
+          throw new Error("Error en credenciales. Usuario no encontrado.");
         }
         // Retornar el objeto de usuario (sin la contraseña)
         return {
