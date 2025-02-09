@@ -3,7 +3,8 @@ import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-
+import bcrypt from "bcrypt";
+import { eq } from "drizzle-orm/expressions";
 import { db } from "@/server/db";
 import {
   accounts,
@@ -33,22 +34,6 @@ declare module "next-auth" {
   // }
 }
 
-async function verifyUser(email: string, password: string) {
-  if (!email || !password) {
-    return null;
-  }
-  return { id: "U2", email: "pepe@latinchat.com", name: "Pepe" };
-  // Aquí debes consultar tu base de datos o sistema de autenticación
-  // const user = await findUserByEmail(email); // Función ficticia para buscar un usuario por correo
-
-  // if (user && (await comparePasswords(password, user.password))) {
-  //   // Retorna el objeto de usuario sin la contraseña
-  //   return { id: user.id, email: user.email, name: user.name };
-  // }
-
-  return null;
-}
-
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
  *
@@ -65,28 +50,39 @@ export const authConfig = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
     CredentialsProvider({
-      name: "Correo y Contraseña",
+      name: "Credentials",
       credentials: {
-        email: { label: "Correo", type: "email" },
-        password: { label: "Contraseña", type: "password" },
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password", value: "" },
       },
       async authorize(credentials) {
-        console.log("*************Credentials recibidas:", credentials); // Depuración
-        // Aquí debes implementar la lógica para verificar el correo y la contraseña
-        const user = await verifyUser(
-          credentials?.email as string,
-          credentials?.password as string,
-        );
-        console.log("##########################", user);
-
-        if (user) {
-          console.log("************Exito", user);
-          return user; // Retorna el objeto de usuario si la autenticación es exitosa
-        } else {
-          console.log("Fail");
-          return null; // Retorna null si la autenticación falla
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Email y contraseña son requeridos.");
         }
-        //return { id: "U2", email: "pepe@latinchat.com", name: "Pepe" };
+        // Buscar el usuario en la base de datos usando Drizzle
+        const [user] = await db
+          .select()
+          .from(users)
+          .where(eq(users.email, credentials.email as string))
+          .limit(1);
+        if (!user) {
+          throw new Error("Usuario no encontrado.");
+        }
+        // Verificar la contraseña
+        const isValidPassword = await bcrypt.compare(
+          credentials.password as string,
+          user.password!,
+        );
+        if (!isValidPassword) {
+          throw new Error("Contraseña incorrecta.");
+        }
+        // Retornar el objeto de usuario (sin la contraseña)
+        return {
+          id: user.id.toString(), // Asegúrate de que el ID sea una cadena
+          name: user.name,
+          email: user.email,
+          image: user.image,
+        };
       },
     }),
     /**
@@ -108,26 +104,17 @@ export const authConfig = {
   pages: {
     error: "/auth/notsession", // Ruta personalizada para la página de sesión no iniciada
   },
-  // callbacks: {
-  //   session: ({ session, user }) => ({
-  //     ...session,
-  //     user: {
-  //       ...session.user,
-  //       id: user.id,
-  //     },
-  //   }),
-  // },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id; // Agrega el ID del usuario al token
+        token.id = user.id;
       }
       return token;
     },
     async session({ session, token }) {
       if (token.id && typeof token.id === "string") {
-        session.user = session.user || {}; // Asegurar que session.user existe
-        session.user.id = token.id; // Agregar el ID del usuario
+        session.user = session.user || {};
+        session.user.id = token.id;
       }
       return session;
     },

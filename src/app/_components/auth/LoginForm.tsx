@@ -26,7 +26,7 @@ export function LoginForm({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isVisible, setIsVisible] = useState(false);
-  const [error, setError] = useState("");
+  //const [error, setError] = useState("");
   // Hook para AlertDialogAuthCredentials
   const [isDialogAuthCredentials, setIsDialogAuthCredentials] = useState(false);
   // Loading
@@ -63,19 +63,25 @@ export function LoginForm({
 
   const handleSignInCredentials = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    //setError("");
     setLoading(true);
-    const result = await signIn("credentials", {
-      redirect: false,
-      email,
-      password,
-    });
-    if (result?.error) {
-      setError(result.error);
-    } else {
-      router.push("/dashboard"); // Redirige al dashboard si el inicio de sesión es exitoso
+    try {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+      if (result?.error) {
+        //setError(result.error);
+        setIsDialogAuthCredentials(true);
+      } else {
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      setIsDialogAuthCredentials(true);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -84,15 +90,10 @@ export function LoginForm({
         <CardHeader>
           <CardTitle className="text-2xl">Inicio de sesión</CardTitle>
           <CardDescription>
-            Ingrese sus credenciales para ingresar a su cuenta
+            Ingrese sus credenciales para ingresar
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {/* OJO CON MENSAJE PROVISORIO */}
-          <p className="text-red-600">
-            Por ahora está dejando pasar cualquier mail y contraseña
-          </p>
-          {/* OJO CON MENSAJE PROVISORIO */}
           <form onSubmit={handleSignInCredentials}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
@@ -134,7 +135,6 @@ export function LoginForm({
                   </Button>
                 </div>
               </div>
-              {error && <p className="text-red-500">{error}</p>}
               <Button
                 variant="outline"
                 className="w-full bg-slate-700 text-base text-white hover:bg-black hover:text-white"
