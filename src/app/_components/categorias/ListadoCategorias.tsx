@@ -73,6 +73,17 @@ export default function ListadoCategorias() {
     }
   };
 
+  const filtrar = () => {
+    const filtered = listaCategorias.filter(
+      (item) =>
+        item.id.toString().includes(filter) ||
+        item.nombre.toUpperCase().includes(filter),
+    );
+    setFilteredData(filtered);
+    setCurrentPage(1);
+    setSelectedCategoria(null);
+  };
+
   useEffect(() => {
     setFilteredData(listaCategorias);
   }, [listaCategorias]);
@@ -129,17 +140,6 @@ export default function ListadoCategorias() {
     setSelectedCategoria(selectedCategoria?.id === item?.id ? null : item);
   };
 
-  const filtrar = () => {
-    const filtered = listaCategorias.filter(
-      (item) =>
-        item.id.toString().includes(filter) ||
-        item.nombre.toUpperCase().includes(filter),
-    );
-    setFilteredData(filtered);
-    setCurrentPage(1);
-    setSelectedCategoria(null);
-  };
-
   const handleSort = (columnKey: keyof Categoria) => {
     if (sortColumn === columnKey) {
       if (sortDirection === "asc") {
@@ -189,9 +189,10 @@ export default function ListadoCategorias() {
   const handleClearFilter = () => {
     if (filter.length > 0) {
       setFilter("");
-      setFilteredData(listaCategorias);
-      setCurrentPage(1);
-      setSelectedCategoria(null);
+      filtrar();
+      // setFilteredData(listaCategorias);
+      // setCurrentPage(1);
+      // setSelectedCategoria(null);
     }
   };
 

@@ -70,7 +70,7 @@ export const authConfig = {
         }
         // Verificar la contraseña
         const isValidPassword = await bcrypt.compare(
-          credentials.password as string,
+          credentials.password.toString(),
           user.password!,
         );
         if (!isValidPassword) {

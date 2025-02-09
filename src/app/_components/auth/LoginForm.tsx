@@ -78,6 +78,7 @@ export function LoginForm({
         router.push("/dashboard");
       }
     } catch (error) {
+      console.log("AuthCredentials", error);
       setIsDialogAuthCredentials(true);
     } finally {
       setLoading(false);
