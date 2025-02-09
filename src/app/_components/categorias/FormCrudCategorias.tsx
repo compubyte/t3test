@@ -16,6 +16,8 @@ import {
   CustomToasterValidation,
 } from "../_generics/CustomToaster";
 import CustomAlertDialog from "../_generics/CustomAlertDialog";
+import { LoadingSpinnerMini } from "../_generics/LoadingSpinner";
+import { X } from "lucide-react";
 
 interface FormCrudCategoriasProps {
   isOpen: boolean;
@@ -35,6 +37,7 @@ export default function FormCrudCategorias({
   const [title, setTitle] = useState(""); // Para el mensaje
   //const [description, setDescription] = useState(""); // Para el mensaje
   const [isAlertDialog, setIsAlertDialog] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null); // Referencia al input
 
   // Manejo de mayúsculas en Inputs. Guarda posición del cursor
@@ -71,15 +74,19 @@ export default function FormCrudCategorias({
   const eliminarCategoriaMutation = api.categorias.eliminar.useMutation();
 
   const agregarCategoria = async (nombre: string) => {
+    setIsLoading(true); // Activar el estado de carga
     try {
       await agregarCategoriaMutation.mutateAsync({ nombre });
       await refetchCategorias();
     } catch (error) {
       console.error("Error al agregar la categoría:", error);
+    } finally {
+      setIsLoading(false); // Desactivar el estado de carga
     }
   };
 
   const editarCategoria = async (id: number, nombre: string) => {
+    setIsLoading(true); // Activar el estado de carga
     try {
       await editarCategoriaMutation.mutateAsync({
         id,
@@ -88,15 +95,20 @@ export default function FormCrudCategorias({
       await refetchCategorias();
     } catch (error) {
       console.error("Error al editar la categoría:", error);
+    } finally {
+      setIsLoading(false); // Desactivar el estado de carga
     }
   };
 
   const eliminarCategoria = async (id: number) => {
+    setIsLoading(true); // Activar el estado de carga
     try {
       await eliminarCategoriaMutation.mutateAsync({ id });
       await refetchCategorias();
     } catch (error) {
       console.error("Error al eliminar la categoría:", error);
+    } finally {
+      setIsLoading(false); // Desactivar el estado de carga
     }
   };
 
@@ -154,7 +166,7 @@ export default function FormCrudCategorias({
     }
 
     if (mode === "editar") {
-      setTitle("Editar los datos de la categoría?");
+      setTitle("¿Editar los datos de la categoría?");
     }
 
     if (mode === "detalle") {
@@ -187,14 +199,28 @@ export default function FormCrudCategorias({
           onClose();
         }}
       >
-        {/* <Dialog modal={true} open={isOpen} onOpenChange={onClose}> */}
-        <DialogContent>
+        <DialogContent className="temas temas-contenedor">
           <DialogHeader>
             <DialogTitle className="text-xl">
-              {mode === "agregar" && "Agregar categoría"}
-              {mode === "editar" && "Editar categoría"}
-              {mode === "detalle" && "Detalles de la categoría"}
-              {mode === "eliminar" && "Eliminar categoría"}
+              <div className="temas -mt-1 mb-2 flex h-8 w-full border-spacing-1 items-center rounded-sm border border-gray-700 px-2 dark:border-gray-400">
+                {/* Título de la página */}
+                <div className="flex-1">
+                  <span className="text-xl font-bold">
+                    {mode === "agregar" && "Agregar categoría"}
+                    {mode === "editar" && "Editar categoría"}
+                    {mode === "detalle" && "Detalle categoría"}
+                    {mode === "eliminar" && "Eliminar categoría"}
+                  </span>
+                </div>
+                {/* Botón de cerrar (X) */}
+                <Button
+                  className="flex h-6 w-6 items-center justify-center rounded-sm bg-gray-500 hover:bg-red-400 hover:text-white"
+                  aria-label="Cerrar"
+                  onClick={handleCancelDialog}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
             </DialogTitle>
           </DialogHeader>
           <form className="space-y-4">
@@ -216,7 +242,6 @@ export default function FormCrudCategorias({
                 name="nombre"
                 value={nombre}
                 onChange={handleChangeInput}
-                //onChange={(e) => setNombre(e.target.value.toUpperCase())}
                 className="w-full rounded border p-2"
                 disabled={mode === "detalle" || mode === "eliminar"}
                 required
@@ -229,6 +254,7 @@ export default function FormCrudCategorias({
                 type="button"
                 onClick={handleCancelDialog}
                 variant="outline"
+                disabled={isLoading} // Deshabilitar el botón mientras se carga
               >
                 {mode === "detalle" ? "Salir" : "Cancelar"}
               </Button>
@@ -237,8 +263,15 @@ export default function FormCrudCategorias({
                   type="button"
                   variant={mode === "eliminar" ? "destructive" : "default"}
                   onClick={handleConfirmDialog}
+                  disabled={isLoading} // Deshabilitar el botón mientras se carga
                 >
-                  {mode === "eliminar" ? "Eliminar" : "Guardar"}
+                  {isLoading ? (
+                    <LoadingSpinnerMini /> // Mostrar el spinner si isLoading es true
+                  ) : mode === "eliminar" ? (
+                    "Eliminar"
+                  ) : (
+                    "Guardar"
+                  )}
                 </Button>
               )}
             </div>

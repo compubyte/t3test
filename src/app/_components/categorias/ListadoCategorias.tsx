@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Table,
   TableBody,
@@ -52,10 +52,34 @@ export default function ListadoCategorias() {
   const [dialogCrudMode, setDialogCrudMode] = useState<
     "agregar" | "editar" | "detalle" | "eliminar" | "recargar"
   >("agregar");
+  const inputRef = useRef<HTMLInputElement>(null); // Referencia al input
+
+  // Manejo de mayúsculas en Inputs. Guarda posición del cursor
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, selectionStart } = e.target;
+    // Guarda la posición del cursor antes de actualizar el valor
+    const cursorPosition = selectionStart;
+    // Convierte el texto a mayúsculas
+    const nuevoValor = value.toUpperCase();
+    // Veo a que input aplicar
+    if (e.target.name === "filtro") {
+      setFilter(nuevoValor);
+    }
+    // Restaura la posición del cursor después de actualizar el valor
+    if (inputRef.current) {
+      requestAnimationFrame(() => {
+        inputRef.current!.setSelectionRange(cursorPosition, cursorPosition);
+      });
+    }
+  };
 
   useEffect(() => {
     setFilteredData(listaCategorias);
   }, [listaCategorias]);
+
+  useEffect(() => {
+    filtrar();
+  }, [filter]);
 
   const handleAction = async (
     mode: "agregar" | "editar" | "detalle" | "eliminar" | "recargar",
@@ -105,13 +129,11 @@ export default function ListadoCategorias() {
     setSelectedCategoria(selectedCategoria?.id === item?.id ? null : item);
   };
 
-  const handleFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.toUpperCase();
-    setFilter(value);
+  const filtrar = () => {
     const filtered = listaCategorias.filter(
       (item) =>
-        item.id.toString().includes(value) ||
-        item.nombre.toUpperCase().includes(value),
+        item.id.toString().includes(filter) ||
+        item.nombre.toUpperCase().includes(filter),
     );
     setFilteredData(filtered);
     setCurrentPage(1);
@@ -184,10 +206,13 @@ export default function ListadoCategorias() {
           />
           <div className="flex w-full min-w-[50%] items-center gap-2">
             <Input
+              name="filtro"
               placeholder="Filtrar categorías..."
               value={filter}
-              onChange={handleFilter}
+              onChange={handleChangeInput}
+              //onChange={handleFilter}
               className="max-w-lg flex-1"
+              ref={inputRef}
             />
             <Button
               variant="outline"
