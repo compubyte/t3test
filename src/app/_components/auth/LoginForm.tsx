@@ -31,7 +31,6 @@ export function LoginForm({
   const [isDialogAuthCredentials, setIsDialogAuthCredentials] = useState(false);
   // Loading
   const [loading, setLoading] = useState(false);
-
   const router = useRouter();
 
   const handleConfirmDialogAuthCredentials = () => {
@@ -44,9 +43,7 @@ export function LoginForm({
     try {
       await signIn("github", { callbackUrl: "/dashboard" });
     } catch (error) {
-      console.error("Error al iniciar sesión:", error);
       setIsDialogAuthCredentials(true);
-      setLoading(false);
     }
   };
 
@@ -55,15 +52,12 @@ export function LoginForm({
     try {
       await signIn("google", { callbackUrl: "/dashboard" });
     } catch (error) {
-      console.error("Error al iniciar sesión:", error);
       setIsDialogAuthCredentials(true);
-      setLoading(false);
     }
   };
 
   const handleSignInCredentials = async (e: React.FormEvent) => {
     e.preventDefault();
-    //setError("");
     setLoading(true);
     try {
       const result = await signIn("credentials", {
@@ -72,16 +66,12 @@ export function LoginForm({
         redirect: false,
       });
       if (result?.error) {
-        //setError(result.error);
         setIsDialogAuthCredentials(true);
       } else {
         router.push("/dashboard");
       }
     } catch (error) {
-      console.log("AuthCredentials", error);
       setIsDialogAuthCredentials(true);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -186,6 +176,13 @@ export function LoginForm({
             </div> */}
           </div>
           {loading && <LoadingSpinner />}
+          <div className="my-3 inline-flex w-full items-center justify-center">
+            <hr className="my-4 h-px w-8 border-0 bg-gray-700/10 dark:bg-gray-100/10" />
+            <span className="min-w-10 bg-transparent px-3 text-sm font-medium text-gray-900 dark:text-white">
+              Sólo podrá ingresar si está registrado
+            </span>
+            <hr className="my-4 h-px w-8 border-0 bg-gray-700/10 dark:bg-gray-100/10" />
+          </div>
         </CardContent>
       </Card>
 
@@ -194,7 +191,7 @@ export function LoginForm({
         isOpen={isDialogAuthCredentials}
         onOpenChange={setIsDialogAuthCredentials}
         title="Error al iniciar sesión."
-        description="Asegúrese de que sus credenciales sean correctas y reintente."
+        description="Asegúrese de que sus credenciales sean correctas."
         onConfirm={handleConfirmDialogAuthCredentials}
         //onCancel={handleCancelDialogAuthCredentials} // Pasa la función de cancelar
         confirmText="Aceptar"

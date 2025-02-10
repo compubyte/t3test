@@ -1,4 +1,4 @@
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
+//import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
@@ -7,10 +7,10 @@ import bcrypt from "bcrypt";
 import { eq } from "drizzle-orm/expressions";
 import { db } from "@/server/db";
 import {
-  accounts,
-  sessions,
+  //accounts,
+  //sessions,
   users,
-  verificationTokens,
+  //verificationTokens,
 } from "@/server/db/schema";
 
 /**
@@ -98,32 +98,49 @@ export const authConfig = {
      * @see https://next-auth.js.org/providers/github
      */
   ],
-  adapter: DrizzleAdapter(db, {
-    usersTable: users,
-    accountsTable: accounts,
-    sessionsTable: sessions,
-    verificationTokensTable: verificationTokens,
-  }),
+  // adapter: DrizzleAdapter(db, {
+  //   usersTable: users,
+  //   accountsTable: accounts,
+  //   sessionsTable: sessions,
+  //   verificationTokensTable: verificationTokens,
+  // }),
   pages: {
-    error: "/auth/notsession", // Ruta personalizada para la página de sesión no iniciada
-  },
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (token.id && typeof token.id === "string") {
-        session.user = session.user || {};
-        session.user.id = token.id;
-      }
-      return session;
-    },
+    //error: "/auth/notsession", // Ruta personalizada para la página de sesión no iniciada
+    error: "/auth/notuserexist", // Ruta personalizada para la página usuario no cargado
   },
   session: {
     strategy: "jwt", // database
+  },
+  callbacks: {
+    async signIn({ user, account }) {
+      if (account?.provider !== "credentials") {
+        // Buscar si el usuario existe en la base de datos
+        const [existingUser] = await db
+          .select()
+          .from(users)
+          .where(eq(users.email, user.email!))
+          .limit(1);
+
+        if (!existingUser) {
+          return false; // Bloquea el acceso si no existe en la base de datos
+        }
+      }
+      return true; // Permite el inicio de sesión si el email existe
+    },
+
+    async jwt({ token, user }) {
+      if (user) {
+        token.email = user.email;
+      }
+      return token;
+    },
+
+    async session({ session, token }) {
+      if (token.email) {
+        session.user.email = token.email;
+      }
+      return session;
+    },
   },
   secret: process.env.NEXTAUTH_SECRET,
 } satisfies NextAuthConfig;

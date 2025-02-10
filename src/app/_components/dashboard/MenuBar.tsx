@@ -403,6 +403,22 @@ export function MenuBar() {
                   Listado de cierres de cajas{" "}
                   {/* Listados -> (Cajas) -> Listado de cierres de cajas */}
                 </MenubarItem>
+                <MenubarItem
+                  className="text-base"
+                  onClick={() => setTheme("light")}
+                >
+                  <SquarePlus className="icono-menu" />
+                  Listado de ingresos de caja{" "}
+                  {/* Listados -> (Cajas) -> Listado de cierres de cajas */}
+                </MenubarItem>
+                <MenubarItem
+                  className="text-base"
+                  onClick={() => setTheme("light")}
+                >
+                  <SquareMinus className="icono-menu" />
+                  Listado de egresos de caja{" "}
+                  {/* Listados -> (Cajas) -> Listado de cierres de cajas */}
+                </MenubarItem>
               </MenubarSubContent>
             </MenubarSub>
             {/* //// Fin submenú Cajas */}
