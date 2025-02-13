@@ -4,6 +4,8 @@ import {
   publicProcedure,
 } from "@/server/api/trpc";
 import { tablaCategorias } from "@/server/db/schema";
+import { categoriaInsertSchema } from "@/server/models/modelos";
+import { validCategoria } from "@/app/(validations)/validCategoria";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
@@ -51,20 +53,45 @@ export const categoriasRouter = createTRPCRouter({
       }
     }),
   agregar: publicProcedure
-    .input(
-      z.object({ nombre: z.string().min(1, "El nombre no puede estar vacío") }),
-    ) // Validar que el nombre no esté vacío
+    .input(categoriaInsertSchema) // Usamos directamente el schema de validación
     .mutation(async ({ ctx, input }) => {
+      // Validación manual con Zod
+      const validation = validCategoria(input);
+      // Si la validación falla, devolvemos el error manualmente
+      if (!validation.success) {
+        return {
+          success: false,
+          error: validation.error,
+        };
+      }
       try {
         // Insertar la nueva categoría en la base de datos
-        const nuevaCategoria = await ctx.db
+        await ctx.db
           .insert(tablaCategorias)
-          .values({ nombre: input.nombre })
-          .returning(); // Devuelve la categoría insertada
-        return nuevaCategoria; // Retornar la categoría creada
-      } catch (error) {
-        console.error("Error adding category:", error);
-        throw new Error("Failed to add category. Please try again later.");
+          .values({ nombre: validation.data.nombre });
+        return { success: true, data: validation.data };
+      } catch (error: any) {
+        // Error con código PostgreSQL para unique constraint
+        if (
+          error.message?.toLowerCase().includes("unique constraint") ||
+          error.code === "23505"
+        ) {
+          return {
+            success: false,
+            error: {
+              code: "CONFLICT",
+              message: `La categoría "${validation.data.nombre}" ya existe`,
+            },
+          };
+        }
+        // Error del servidor o por defecto
+        return {
+          success: false,
+          error: {
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Error al agregar la categoría",
+          },
+        };
       }
     }),
   editar: publicProcedure

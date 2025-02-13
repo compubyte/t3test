@@ -73,6 +73,10 @@
   @apply bg-gray-400 dark:bg-gray-700;
 }
 
+.texto-contrastado {
+  @apply text-black dark:text-white;
+}
+
 .texto-con-sangria {
   text-indent: 2rem;
 }

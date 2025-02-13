@@ -60,10 +60,12 @@ import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { MenuBarAccordion } from "./MenuBarAccordion";
 import { signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 export function MenuBar() {
   const { setTheme } = useTheme();
   const router = useRouter();
+  const { data: session } = useSession();
 
   return (
     <div className="mb-4 flex items-center">
@@ -128,42 +130,48 @@ export function MenuBar() {
           </MenubarTrigger>
           <MenubarContent>
             {/* //// Inicio submenú Producto */}
-            <MenubarSub>
-              <MenubarSubTrigger className="cursor-pointer text-base">
-                <Package className="icono-menu" />
-                Productos
-              </MenubarSubTrigger>
-              <MenubarSubContent>
-                <MenubarItem className="text-base">
-                  <Package2 className="icono-menu" />
-                  Manejo de productos
-                </MenubarItem>
-                <MenubarItem className="text-base">
-                  <Ruler className="icono-menu" />
-                  Manejo de unidades de venta
-                </MenubarItem>
-                <MenubarItem
-                  className="text-base"
-                  onClick={() => router.push("/dashboard/categorias")}
-                >
-                  <Tag className="icono-menu" />
-                  Manejo de categorías
-                </MenubarItem>
-                <MenubarItem className="text-base">
-                  <FileSpreadsheet className="icono-menu" />
-                  Manejo de listas de precio
-                </MenubarItem>
-              </MenubarSubContent>
-            </MenubarSub>
+            {session?.user.permisos.pProductos && (
+              <MenubarSub>
+                <MenubarSubTrigger className="cursor-pointer text-base">
+                  <Package className="icono-menu" />
+                  Productos
+                </MenubarSubTrigger>
+                <MenubarSubContent>
+                  <MenubarItem className="text-base">
+                    <Package2 className="icono-menu" />
+                    Manejo de productos
+                  </MenubarItem>
+                  <MenubarItem className="text-base">
+                    <Ruler className="icono-menu" />
+                    Manejo de unidades de venta
+                  </MenubarItem>
+                  <MenubarItem
+                    className="text-base"
+                    onClick={() => router.push("/dashboard/categorias")}
+                  >
+                    <Tag className="icono-menu" />
+                    Manejo de categorías
+                  </MenubarItem>
+                  <MenubarItem className="text-base">
+                    <FileSpreadsheet className="icono-menu" />
+                    Manejo de listas de precio
+                  </MenubarItem>
+                </MenubarSubContent>
+              </MenubarSub>
+            )}
             {/* //// Fin submenú Producto */}
-            <MenubarItem className="text-base">
-              <Smile className="icono-menu" />
-              Manejo de clientes
-            </MenubarItem>
-            <MenubarItem className="text-base">
-              <Handshake className="icono-menu" />
-              Manejo de proveedores
-            </MenubarItem>
+            {session?.user.permisos.pVentas && (
+              <MenubarItem className="text-base">
+                <Smile className="icono-menu" />
+                Manejo de clientes
+              </MenubarItem>
+            )}
+            {session?.user.permisos.pCompras && (
+              <MenubarItem className="text-base">
+                <Handshake className="icono-menu" />
+                Manejo de proveedores
+              </MenubarItem>
+            )}
             <MenubarItem className="text-base">
               <MapPin className="icono-menu" />
               Manejo de ciudades

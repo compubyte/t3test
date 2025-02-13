@@ -1,278 +1,9 @@
 {
-  "id": "ccab7f28-2ed0-4c2e-b1c8-7448f276b0f0",
-  "prevId": "262afcd3-9eb8-4c53-8518-2d18d26e28f4",
+  "id": "3112146f-f6aa-46e0-b2ca-cdc8aa37eaea",
+  "prevId": "c574efe5-689c-4112-8a62-ec657d320721",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.t3test_account": {
-      "name": "t3test_account",
-      "schema": "",
-      "columns": {
-        "user_id": {
-          "name": "user_id",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "type": {
-          "name": "type",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "provider": {
-          "name": "provider",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "provider_account_id": {
-          "name": "provider_account_id",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "refresh_token": {
-          "name": "refresh_token",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "access_token": {
-          "name": "access_token",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "expires_at": {
-          "name": "expires_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "token_type": {
-          "name": "token_type",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "scope": {
-          "name": "scope",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "id_token": {
-          "name": "id_token",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "session_state": {
-          "name": "session_state",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {
-        "account_user_id_idx": {
-          "name": "account_user_id_idx",
-          "columns": [
-            {
-              "expression": "user_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "t3test_account_user_id_t3test_user_id_fk": {
-          "name": "t3test_account_user_id_t3test_user_id_fk",
-          "tableFrom": "t3test_account",
-          "tableTo": "t3test_user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "t3test_account_provider_provider_account_id_pk": {
-          "name": "t3test_account_provider_provider_account_id_pk",
-          "columns": [
-            "provider",
-            "provider_account_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
-    },
-    "public.t3test_post": {
-      "name": "t3test_post",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "identity": {
-            "type": "byDefault",
-            "name": "t3test_post_id_seq",
-            "schema": "public",
-            "increment": "1",
-            "startWith": "1",
-            "minValue": "1",
-            "maxValue": "2147483647",
-            "cache": "1",
-            "cycle": false
-          }
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_by": {
-          "name": "created_by",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "CURRENT_TIMESTAMP"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {
-        "created_by_idx": {
-          "name": "created_by_idx",
-          "columns": [
-            {
-              "expression": "created_by",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "name_idx": {
-          "name": "name_idx",
-          "columns": [
-            {
-              "expression": "name",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "t3test_post_created_by_t3test_user_id_fk": {
-          "name": "t3test_post_created_by_t3test_user_id_fk",
-          "tableFrom": "t3test_post",
-          "tableTo": "t3test_user",
-          "columnsFrom": [
-            "created_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.t3test_session": {
-      "name": "t3test_session",
-      "schema": "",
-      "columns": {
-        "session_token": {
-          "name": "session_token",
-          "type": "varchar(255)",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "expires": {
-          "name": "expires",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {
-        "session_user_id_idx": {
-          "name": "session_user_id_idx",
-          "columns": [
-            {
-              "expression": "user_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "t3test_session_user_id_t3test_user_id_fk": {
-          "name": "t3test_session_user_id_t3test_user_id_fk",
-          "tableFrom": "t3test_session",
-          "tableTo": "t3test_user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
     "public.t3test_categorias": {
       "name": "t3test_categorias",
       "schema": "",
@@ -304,10 +35,18 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "t3test_categorias_nombre_unique": {
+          "name": "t3test_categorias_nombre_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "nombre"
+          ]
+        }
+      }
     },
-    "public.t3test_productos": {
-      "name": "t3test_productos",
+    "public.t3test_ciudades": {
+      "name": "t3test_ciudades",
       "schema": "",
       "columns": {
         "id": {
@@ -317,7 +56,48 @@
           "notNull": true,
           "identity": {
             "type": "always",
-            "name": "t3test_productos_id_seq",
+            "name": "t3test_ciudades_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "nombre": {
+          "name": "nombre",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "t3test_ciudades_nombre_unique": {
+          "name": "t3test_ciudades_nombre_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "nombre"
+          ]
+        }
+      }
+    },
+    "public.t3test_clientes": {
+      "name": "t3test_clientes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "t3test_clientes_id_seq",
             "schema": "public",
             "increment": "1",
             "startWith": "1",
@@ -333,21 +113,34 @@
           "primaryKey": false,
           "notNull": true
         },
-        "precioUnitario": {
-          "name": "precioUnitario",
-          "type": "numeric",
+        "direccion": {
+          "name": "direccion",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
-        "inventario": {
-          "name": "inventario",
-          "type": "integer",
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tieneCtaCte": {
+          "name": "tieneCtaCte",
+          "type": "boolean",
           "primaryKey": false,
           "notNull": true,
-          "default": 0
+          "default": false
         },
-        "categoriaId": {
-          "name": "categoriaId",
+        "limiteCtaCte": {
+          "name": "limiteCtaCte",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "0"
+        },
+        "ciudadId": {
+          "name": "ciudadId",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
@@ -355,12 +148,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "t3test_productos_categoriaId_t3test_categorias_id_fk": {
-          "name": "t3test_productos_categoriaId_t3test_categorias_id_fk",
-          "tableFrom": "t3test_productos",
-          "tableTo": "t3test_categorias",
+        "t3test_clientes_ciudadId_t3test_ciudades_id_fk": {
+          "name": "t3test_clientes_ciudadId_t3test_ciudades_id_fk",
+          "tableFrom": "t3test_clientes",
+          "tableTo": "t3test_ciudades",
           "columnsFrom": [
-            "categoriaId"
+            "ciudadId"
           ],
           "columnsTo": [
             "id"
@@ -370,23 +163,102 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "t3test_clientes_nombre_unique": {
+          "name": "t3test_clientes_nombre_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "nombre"
+          ]
+        }
+      }
     },
-    "public.t3test_user": {
-      "name": "t3test_user",
+    "public.t3test_listasPrecio": {
+      "name": "t3test_listasPrecio",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(255)",
+          "type": "integer",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "t3test_listasPrecio_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
         },
-        "name": {
-          "name": "name",
+        "nombre": {
+          "name": "nombre",
           "type": "varchar(255)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
+        },
+        "cantidadActivacion": {
+          "name": "cantidadActivacion",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "t3test_listasPrecio_nombre_unique": {
+          "name": "t3test_listasPrecio_nombre_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "nombre"
+          ]
+        },
+        "t3test_listasPrecio_cantidadActivacion_unique": {
+          "name": "t3test_listasPrecio_cantidadActivacion_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "cantidadActivacion"
+          ]
+        }
+      }
+    },
+    "public.t3test_proveedores": {
+      "name": "t3test_proveedores",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "t3test_proveedores_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "nombre": {
+          "name": "nombre",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "direccion": {
+          "name": "direccion",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
         },
         "email": {
           "name": "email",
@@ -394,60 +266,304 @@
           "primaryKey": false,
           "notNull": true
         },
-        "email_verified": {
-          "name": "email_verified",
-          "type": "timestamp with time zone",
+        "tieneCtaCte": {
+          "name": "tieneCtaCte",
+          "type": "boolean",
           "primaryKey": false,
-          "notNull": false,
-          "default": "CURRENT_TIMESTAMP"
+          "notNull": true,
+          "default": false
         },
-        "image": {
-          "name": "image",
+        "limiteCtaCte": {
+          "name": "limiteCtaCte",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "0"
+        },
+        "ciudadId": {
+          "name": "ciudadId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "t3test_proveedores_ciudadId_t3test_ciudades_id_fk": {
+          "name": "t3test_proveedores_ciudadId_t3test_ciudades_id_fk",
+          "tableFrom": "t3test_proveedores",
+          "tableTo": "t3test_ciudades",
+          "columnsFrom": [
+            "ciudadId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "t3test_proveedores_nombre_unique": {
+          "name": "t3test_proveedores_nombre_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "nombre"
+          ]
+        }
+      }
+    },
+    "public.t3test_sucursales": {
+      "name": "t3test_sucursales",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "t3test_sucursales_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "nombre": {
+          "name": "nombre",
           "type": "varchar(255)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
+        },
+        "direccion": {
+          "name": "direccion",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ciudadId": {
+          "name": "ciudadId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "t3test_sucursales_ciudadId_t3test_ciudades_id_fk": {
+          "name": "t3test_sucursales_ciudadId_t3test_ciudades_id_fk",
+          "tableFrom": "t3test_sucursales",
+          "tableTo": "t3test_ciudades",
+          "columnsFrom": [
+            "ciudadId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "t3test_sucursales_nombre_unique": {
+          "name": "t3test_sucursales_nombre_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "nombre"
+          ]
+        }
+      }
+    },
+    "public.t3test_unidadesVenta": {
+      "name": "t3test_unidadesVenta",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "t3test_unidadesVenta_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "nombre": {
+          "name": "nombre",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "t3test_unidadesVenta_nombre_unique": {
+          "name": "t3test_unidadesVenta_nombre_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "nombre"
+          ]
+        }
+      }
     },
-    "public.t3test_verification_token": {
-      "name": "t3test_verification_token",
+    "public.t3test_usuarios": {
+      "name": "t3test_usuarios",
       "schema": "",
       "columns": {
-        "identifier": {
-          "name": "identifier",
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "t3test_usuarios_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "nombre": {
+          "name": "nombre",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
-        "token": {
-          "name": "token",
+        "email": {
+          "name": "email",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
-        "expires": {
-          "name": "expires",
-          "type": "timestamp with time zone",
+        "password": {
+          "name": "password",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pPreferencias": {
+          "name": "pPreferencias",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "pProductos": {
+          "name": "pProductos",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "pListasPrecio": {
+          "name": "pListasPrecio",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "pUsuarios": {
+          "name": "pUsuarios",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "pSucursales": {
+          "name": "pSucursales",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "pInventario": {
+          "name": "pInventario",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "pVentas": {
+          "name": "pVentas",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "pCompras": {
+          "name": "pCompras",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "pListados": {
+          "name": "pListados",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "estado": {
+          "name": "estado",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "sucursalId": {
+          "name": "sucursalId",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "t3test_verification_token_identifier_token_pk": {
-          "name": "t3test_verification_token_identifier_token_pk",
-          "columns": [
-            "identifier",
-            "token"
-          ]
+      "foreignKeys": {
+        "t3test_usuarios_sucursalId_t3test_sucursales_id_fk": {
+          "name": "t3test_usuarios_sucursalId_t3test_sucursales_id_fk",
+          "tableFrom": "t3test_usuarios",
+          "tableTo": "t3test_sucursales",
+          "columnsFrom": [
+            "sucursalId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
-      "uniqueConstraints": {}
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "t3test_usuarios_email_unique": {
+          "name": "t3test_usuarios_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      }
     }
   },
   "enums": {},

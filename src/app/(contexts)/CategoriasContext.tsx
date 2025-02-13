@@ -2,12 +2,17 @@
 
 import { createContext, useContext, useState } from "react";
 import { api } from "@/trpc/react"; // Importa la API tRPC
-import type { Categoria } from "@/server/models/modelos";
+import type { categoriaFullSchema } from "@/server/models/modelos";
+import { z } from "zod";
 
+// ********** Tipos **********
+type objCategoria = z.infer<typeof categoriaFullSchema>;
+
+// ********** Contexto **********
 interface CategoriasContextProps {
-  listaCategorias: Categoria[];
-  selectedCategoria: Categoria | null;
-  setSelectedCategoria: (category: Categoria | null) => void;
+  listaCategorias: objCategoria[];
+  selectedCategoria: objCategoria | null;
+  setSelectedCategoria: (category: objCategoria | null) => void;
   refetchCategorias: () => void | Promise<void>;
 }
 
@@ -23,16 +28,8 @@ export function CategoriasProvider({
   const [listaCategorias, { refetch }] =
     api.categorias.getList.useSuspenseQuery();
 
-  // const {
-  //   data: listaCategorias,
-  //   refetch,
-  //   isLoading,
-  //   error,
-  // } = api.categorias.getList.useQuery();
-
-  const [selectedCategoria, setSelectedCategoria] = useState<Categoria | null>(
-    null,
-  );
+  const [selectedCategoria, setSelectedCategoria] =
+    useState<objCategoria | null>(null);
 
   const refetchCategorias = async () => {
     await refetch();

@@ -9,7 +9,8 @@ import { db } from "@/server/db";
 import {
   //accounts,
   //sessions,
-  users,
+  //users,
+  usuarios,
   //verificationTokens,
 } from "@/server/db/schema";
 
@@ -23,15 +24,37 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
+      permisos: {
+        pPreferencias: boolean;
+        pProductos: boolean;
+        pListasPrecio: boolean;
+        pUsuarios: boolean;
+        pSucursales: boolean;
+        pInventario: boolean;
+        pVentas: boolean;
+        pCompras: boolean;
+        pListados: boolean;
+      };
       // ...other properties
       // role: UserRole;
     } & DefaultSession["user"];
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface User {
+    permisos: {
+      pPreferencias: boolean;
+      pProductos: boolean;
+      pListasPrecio: boolean;
+      pUsuarios: boolean;
+      pSucursales: boolean;
+      pInventario: boolean;
+      pVentas: boolean;
+      pCompras: boolean;
+      pListados: boolean;
+    };
+    // ...other properties
+    // role: UserRole;
+  }
 }
 
 /**
@@ -60,12 +83,12 @@ export const authConfig = {
           throw new Error("Email y contraseña son requeridos.");
         }
         // Buscar el usuario en la base de datos usando Drizzle
-        const [user] = await db
+        const [usuarioLogin] = await db
           .select()
-          .from(users)
-          .where(eq(users.email, credentials.email as string))
+          .from(usuarios)
+          .where(eq(usuarios.email, credentials.email as string))
           .limit(1);
-        if (!user) {
+        if (!usuarioLogin) {
           throw new Error("Error en credenciales. Usuario no encontrado.");
         }
         if (typeof credentials.password !== "string") {
@@ -74,17 +97,27 @@ export const authConfig = {
         // Verificar la contraseña
         const isValidPassword = await bcrypt.compare(
           credentials.password,
-          user.password,
+          usuarioLogin.password,
         );
         if (!isValidPassword) {
           throw new Error("Error en credenciales. Usuario no encontrado.");
         }
         // Retornar el objeto de usuario (sin la contraseña)
         return {
-          id: user.id.toString(), // Asegúrate de que el ID sea una cadena
-          name: user.name,
-          email: user.email,
-          image: user.image,
+          id: usuarioLogin.id.toString(), // Asegúrate de que el ID sea una cadena
+          name: usuarioLogin.nombre,
+          email: usuarioLogin.email,
+          permisos: {
+            pPreferencias: usuarioLogin.pPreferencias,
+            pProductos: usuarioLogin.pProductos,
+            pListasPrecio: usuarioLogin.pListasPrecio,
+            pUsuarios: usuarioLogin.pUsuarios,
+            pSucursales: usuarioLogin.pSucursales,
+            pInventario: usuarioLogin.pInventario,
+            pVentas: usuarioLogin.pVentas,
+            pCompras: usuarioLogin.pCompras,
+            pListados: usuarioLogin.pListados,
+          },
         };
       },
     }),
@@ -115,13 +148,13 @@ export const authConfig = {
     async signIn({ user, account }) {
       if (account?.provider !== "credentials") {
         // Buscar si el usuario existe en la base de datos
-        const [existingUser] = await db
+        const [existeUsuario] = await db
           .select()
-          .from(users)
-          .where(eq(users.email, user.email!))
+          .from(usuarios)
+          .where(eq(usuarios.email, user.email!))
           .limit(1);
 
-        if (!existingUser) {
+        if (!existeUsuario) {
           return false; // Bloquea el acceso si no existe en la base de datos
         }
       }
@@ -131,6 +164,8 @@ export const authConfig = {
     async jwt({ token, user }) {
       if (user) {
         token.email = user.email;
+        token.permisos = user.permisos;
+        //token.permissions = user.permisos; // Agregar permisos al token
       }
       return token;
     },
@@ -138,6 +173,18 @@ export const authConfig = {
     async session({ session, token }) {
       if (token.email) {
         session.user.email = token.email;
+        session.user.permisos = token.permisos as {
+          pPreferencias: boolean;
+          pProductos: boolean;
+          pListasPrecio: boolean;
+          pUsuarios: boolean;
+          pSucursales: boolean;
+          pInventario: boolean;
+          pVentas: boolean;
+          pCompras: boolean;
+          pListados: boolean;
+        };
+        //session.user.permisos = token.permisos; // Agregar permisos a la sesión
       }
       return session;
     },

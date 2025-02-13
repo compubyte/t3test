@@ -17,7 +17,7 @@ export default function NotUserExist() {
           <CardHeader>
             <CardTitle className="text-2xl">
               <UserX className="mx-auto mb-2 h-16 w-16" />
-              Usuario sin acceso
+              El usuario no existe
             </CardTitle>
             <CardDescription>
               No está registrado para utilizar la App.

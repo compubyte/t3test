@@ -66,6 +66,7 @@ export function LoginForm({
         redirect: false,
       });
       if (result?.error) {
+        setLoading(false);
         setIsDialogAuthCredentials(true);
       } else {
         router.push("/dashboard");

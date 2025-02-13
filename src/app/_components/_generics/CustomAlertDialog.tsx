@@ -8,6 +8,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogOverlay,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
@@ -18,7 +19,7 @@ interface CustomAlertDialogProps {
   description?: string; // Descripción del diálogo
   onCancel?: () => void; // Función que se ejecuta al cancelar (opcional)
   onConfirm: () => void; // Función que se ejecuta al confirmar
-  confirmText?: string;
+  confirmText: string;
   cancelText?: string;
 }
 
@@ -34,10 +35,16 @@ export default function CustomAlertDialog({
 }: CustomAlertDialogProps) {
   return (
     <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="temas temas-contenedor w-[350px]">
+      {/* No opaca tanto el fondo */}
+      <AlertDialogOverlay className="bg-black/1" />
+      <AlertDialogContent className="temas w-[350px] border-2 border-white">
         <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>{description}</AlertDialogDescription>
+          <AlertDialogTitle className="text-lg font-bold">
+            {title}
+          </AlertDialogTitle>
+          <AlertDialogDescription className="texto-contrastado text-base">
+            {description}
+          </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           {cancelText && (
