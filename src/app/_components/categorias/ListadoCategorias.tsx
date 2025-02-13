@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Table,
   TableBody,
@@ -73,7 +73,8 @@ export default function ListadoCategorias() {
     }
   };
 
-  const filtrar = () => {
+  // Definir filtrar con useCallback
+  const filtrar = useCallback(() => {
     const filtered = listaCategorias.filter(
       (item) =>
         item.id.toString().includes(filter) ||
@@ -82,7 +83,7 @@ export default function ListadoCategorias() {
     setFilteredData(filtered);
     setCurrentPage(1);
     setSelectedCategoria(null);
-  };
+  }, [filter]); // Dependencias de filtrar
 
   useEffect(() => {
     setFilteredData(listaCategorias);
@@ -90,7 +91,7 @@ export default function ListadoCategorias() {
 
   useEffect(() => {
     filtrar();
-  }, [filter]);
+  }, [filter, filtrar]);
 
   const handleAction = async (
     mode: "agregar" | "editar" | "detalle" | "eliminar" | "recargar",
@@ -189,10 +190,7 @@ export default function ListadoCategorias() {
   const handleClearFilter = () => {
     if (filter.length > 0) {
       setFilter("");
-      filtrar();
-      // setFilteredData(listaCategorias);
-      // setCurrentPage(1);
-      // setSelectedCategoria(null);
+      // filtrar();
     }
   };
 

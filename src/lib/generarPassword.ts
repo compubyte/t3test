@@ -1,7 +1,7 @@
 //import bcrypt from "bcrypt";
 
 export function generarPassword(longitud = 8) {
-  const caracteres: string =
+  const caracteres =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$&()_";
   const valoresAleatorios = new Uint32Array(longitud);
   crypto.getRandomValues(valoresAleatorios);

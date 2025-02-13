@@ -3,7 +3,7 @@
 import { createContext, useContext, useState } from "react";
 import { api } from "@/trpc/react"; // Importa la API tRPC
 import type { categoriaFullSchema } from "@/server/models/modelos";
-import { z } from "zod";
+import type { z } from "zod";
 
 // ********** Tipos **********
 type objCategoria = z.infer<typeof categoriaFullSchema>;

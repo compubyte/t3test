@@ -9,7 +9,7 @@ export function validCategoria(input: unknown) {
       success: false as const,
       error: {
         code: "VALIDATION_ERROR",
-        message: validation.error.errors[0]?.message || "Error de validación",
+        message: validation.error.errors[0]?.message ?? "Error de validación",
       },
     };
   }

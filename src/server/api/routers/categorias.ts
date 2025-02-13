@@ -70,11 +70,12 @@ export const categoriasRouter = createTRPCRouter({
           .insert(tablaCategorias)
           .values({ nombre: validation.data.nombre });
         return { success: true, data: validation.data };
-      } catch (error: any) {
+      } catch (error: unknown) {
         // Error con código PostgreSQL para unique constraint
         if (
-          error.message?.toLowerCase().includes("unique constraint") ||
-          error.code === "23505"
+          (error instanceof Error &&
+            error.message.toLowerCase().includes("unique constraint")) ||
+          (error as { code?: string }).code === "23505"
         ) {
           return {
             success: false,

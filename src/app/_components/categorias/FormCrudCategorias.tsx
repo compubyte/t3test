@@ -21,8 +21,8 @@ import CustomAlertDialog from "../_generics/CustomAlertDialog";
 import { LoadingSpinnerMini } from "../_generics/LoadingSpinner";
 import { X } from "lucide-react";
 import { validCategoria } from "@/app/(validations)/validCategoria";
-import { categoriaFullSchema } from "@/server/models/modelos";
-import { z } from "zod";
+import type { categoriaFullSchema } from "@/server/models/modelos";
+import type { z } from "zod";
 
 // ********** Props **********
 interface FormCrudCategoriasProps {
@@ -108,7 +108,7 @@ export default function FormCrudCategorias({
   const agregarCategoria = async (formData: FormState) => {
     setIsLoading(true); // Activar el estado de carga
     const result = await agregarCategoriaMutation.mutateAsync({
-      nombre: formData.nombre!,
+      nombre: formData.nombre,
     });
     if (result.success) {
       // Todo salió bien
@@ -180,8 +180,8 @@ export default function FormCrudCategorias({
     }
     if (mode === "editar") {
       await editarCategoria(
-        formState.id!,
-        formState.nombre!.trim().toUpperCase(),
+        formState.id,
+        formState.nombre.trim().toUpperCase(),
       );
       setAlertDialogState({
         ...alertDialogState,
@@ -190,7 +190,7 @@ export default function FormCrudCategorias({
       CustomToasterSuccess("Datos de la categoría actualizados.");
     }
     if (mode === "eliminar") {
-      await eliminarCategoria(formState.id!);
+      await eliminarCategoria(formState.id);
       setAlertDialogState({
         ...alertDialogState,
         isOpen: false,

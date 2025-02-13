@@ -43,6 +43,7 @@ export function LoginForm({
     try {
       await signIn("github", { callbackUrl: "/dashboard" });
     } catch (error) {
+      console.log(error);
       setIsDialogAuthCredentials(true);
     }
   };
@@ -52,6 +53,7 @@ export function LoginForm({
     try {
       await signIn("google", { callbackUrl: "/dashboard" });
     } catch (error) {
+      console.log(error);
       setIsDialogAuthCredentials(true);
     }
   };
@@ -72,6 +74,7 @@ export function LoginForm({
         router.push("/dashboard");
       }
     } catch (error) {
+      console.log(error);
       setIsDialogAuthCredentials(true);
     }
   };
