@@ -1,10 +1,10 @@
 import "@/styles/globals.css";
+import { Toaster } from "sonner";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { MenuBar } from "@/app/_components/dashboard/MenuBar";
 import { ThemeProvider } from "@/app/_components/dashboard/ThemeProvider";
 import { ModeToggle } from "@/app/_components/dashboard/ModeToogle";
 import { UserInfo } from "@/app/_components/dashboard/UserInfo";
-import { Toaster } from "sonner";
 import Footer from "@/app/_components/_generics/Footer";
 
 export default function RootLayout({

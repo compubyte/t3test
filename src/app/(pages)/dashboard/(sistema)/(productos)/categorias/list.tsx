@@ -13,15 +13,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArrowDownAZ, ArrowUpZA, FilterX, ListOrdered } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import Paginator from "../_generics/Paginator";
-import { useCategoriaContext } from "@/app/(contexts)/CategoriasContext";
+import Paginator from "@/app/_components/_generics/Paginator";
+import { useCategoriaContext } from "@/app/(pages)/dashboard/(sistema)/(productos)/categorias/context";
 import type { Categoria } from "@/server/models/modelos";
-import ActionsCrud from "../_generics/ActionsCrud";
-import FormCrudCategorias from "./FormCrudCategorias";
-import { CustomToasterValidation } from "../_generics/CustomToaster";
-// import { api } from "@/trpc/react";
-// import { useSession } from "next-auth/react";
-// import { LoadingSpinner } from "../_generics/LoadingSpinner";
+import ActionsCrud from "@/app/_components/_generics/ActionsCrud";
+import FormCrudCategorias from "@/app/(pages)/dashboard/(sistema)/(productos)/categorias/crud";
+import { CustomToasterValidation } from "@/app/_components/_generics/CustomToaster";
 
 interface Column {
   key: "id" | "nombre";
@@ -34,7 +31,6 @@ const columns: Column[] = [
 ];
 
 export default function ListadoCategorias() {
-  //const { data: session, status } = useSession(); // Se usa aquí o no ????????
   const {
     listaCategorias,
     setSelectedCategoria,

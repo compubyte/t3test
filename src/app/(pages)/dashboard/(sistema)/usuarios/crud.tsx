@@ -11,18 +11,21 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/react";
-import { useCategoriaContext } from "@/app/(contexts)/CategoriasContext";
+import { useCategoriaContext } from "@/app/(pages)/dashboard/(sistema)/(productos)/categorias/context";
 import {
-  CustomToasterError,
   CustomToasterSuccess,
   CustomToasterValidation,
-} from "../_generics/CustomToaster";
-import CustomAlertDialog from "../_generics/CustomAlertDialog";
-import { LoadingSpinnerMini } from "../_generics/LoadingSpinner";
+} from "@/app/_components/_generics/CustomToaster";
+import CustomAlertDialog from "@/app/_components/_generics/CustomAlertDialog";
+import { LoadingSpinnerMini } from "@/app/_components/_generics/LoadingSpinner";
 import { X } from "lucide-react";
-import { validCategoria } from "@/app/(validations)/validCategoria";
+import {
+  validCategoriaCreate,
+  validCategoriaEdit,
+} from "@/app/(validations)/validCategoria";
 import type { categoriaFullSchema } from "@/server/models/modelos";
 import type { z } from "zod";
+import { MutationError } from "@/app/_components/_generics/MutationError";
 
 // ********** Props **********
 interface FormCrudCategoriasProps {
@@ -41,7 +44,7 @@ interface AlertDialogState {
   isOpen: boolean;
 }
 
-export default function FormCrudCategorias({
+export default function FormCrudUsuarios({
   isOpen,
   onClose,
   mode,
@@ -81,6 +84,10 @@ export default function FormCrudCategorias({
     if (e.target.name === "nombre") {
       setFormState({ ...formState, nombre: nuevoValor });
     }
+    // ***************
+    // Aquí irían otros inputs...
+    // ***************
+    // ***************
     // Restaura la posición del cursor después de actualizar el valor
     if (inputRef.current) {
       requestAnimationFrame(() => {
@@ -89,15 +96,11 @@ export default function FormCrudCategorias({
     }
   };
 
+  // ###### Efecto para actualizar el estado del formulario
   useEffect(() => {
-    if (!selectedCategoria) {
-      setFormState({ id: 0, nombre: "" });
-    } else {
-      setFormState({
-        id: selectedCategoria.id,
-        nombre: selectedCategoria.nombre,
-      });
-    }
+    setFormState(
+      selectedCategoria ? { ...selectedCategoria } : { id: 0, nombre: "" },
+    );
   }, [selectedCategoria]);
 
   // ###### Crud operations
@@ -105,67 +108,72 @@ export default function FormCrudCategorias({
   const editarCategoriaMutation = api.categorias.editar.useMutation();
   const eliminarCategoriaMutation = api.categorias.eliminar.useMutation();
 
+  // ###### Manejo de errores de mutación
+  // const handleMutationError = (error: any) => {
+  //   if (error?.code === "CONFLICT") {
+  //     CustomToasterValidation(error.message);
+  //   } else if (error?.code === "VALIDATION_ERROR") {
+  //     CustomToasterValidation(error.message);
+  //   } else if (error?.code === "INTERNAL_SERVER_ERROR") {
+  //     CustomToasterError(error.message);
+  //   } else {
+  //     CustomToasterError("Ocurrió un error inesperado");
+  //   }
+  // };
+
+  // Action agregar
   const agregarCategoria = async (formData: FormState) => {
     setIsLoading(true); // Activar el estado de carga
     const result = await agregarCategoriaMutation.mutateAsync({
       nombre: formData.nombre,
     });
     if (result.success) {
-      // Todo salió bien
       await refetchCategorias();
       setIsLoading(false); // Desactivar el estado de carga
       return true;
     } else {
-      // Error de conflicto unique
-      if (result.error?.code === "CONFLICT") {
-        CustomToasterValidation(result.error.message);
-      }
-      // Error de validación de Zod
-      else if (result.error?.code === "VALIDATION_ERROR") {
-        CustomToasterValidation(result.error.message);
-      }
-      // Error interno del servidor
-      else if (result.error?.code === "INTERNAL_SERVER_ERROR") {
-        CustomToasterError(result.error.message);
-      }
-      // Error por defecto
-      else {
-        CustomToasterError("Ocurrió un error inesperado");
-      }
+      MutationError(result.error); // Mostrar error
+      setIsLoading(false);
+      return false;
     }
-    setIsLoading(false);
-    return false;
   };
 
-  const editarCategoria = async (id: number, nombre: string) => {
+  // Action editar
+  const editarCategoria = async (formData: FormState) => {
     setIsLoading(true); // Activar el estado de carga
-    try {
-      await editarCategoriaMutation.mutateAsync({
-        id,
-        nombre,
-      });
+    const result = await editarCategoriaMutation.mutateAsync({
+      id: formData.id,
+      nombre: formData.nombre,
+    });
+
+    if (result.success) {
       await refetchCategorias();
-    } catch (error) {
-      console.error("Error al editar la categoría:", error);
-    } finally {
-      setIsLoading(false); // Desactivar el estado de carga
+      setIsLoading(false);
+      return true;
+    } else {
+      MutationError(result.error); // Mostrar error
+      setIsLoading(false);
+      return false;
     }
   };
 
+  // Action eliminar
   const eliminarCategoria = async (id: number) => {
     setIsLoading(true); // Activar el estado de carga
-    try {
-      await eliminarCategoriaMutation.mutateAsync({ id });
+    const result = await eliminarCategoriaMutation.mutateAsync({ id });
+    if (result.success) {
       await refetchCategorias();
-    } catch (error) {
-      console.error("Error al eliminar la categoría:", error);
-    } finally {
-      setIsLoading(false); // Desactivar el estado de carga
+      setIsLoading(false);
+      return true;
+    } else {
+      MutationError(result.error); // Mostrar error
+      setIsLoading(false);
+      return false;
     }
   };
 
   // AlertDialog Respuesta SI estoy seguro
-  const handleConfirmAlertDialog = async () => {
+  const confirmAction = async () => {
     if (mode === "agregar") {
       const result = await agregarCategoria(formState);
       if (result) {
@@ -173,37 +181,48 @@ export default function FormCrudCategorias({
           ...alertDialogState,
           isOpen: false,
         });
-        CustomToasterSuccess("Categoría agregada correctamente.");
+        CustomToasterSuccess("Categoría agregada satisfactoriamente");
       } else {
         return;
       }
     }
+
     if (mode === "editar") {
-      await editarCategoria(
-        formState.id,
-        formState.nombre.trim().toUpperCase(),
-      );
-      setAlertDialogState({
-        ...alertDialogState,
-        isOpen: false,
+      const result = await editarCategoria({
+        id: formState.id,
+        nombre: formState.nombre.trim().toUpperCase(),
       });
-      CustomToasterSuccess("Datos de la categoría actualizados.");
+      if (result) {
+        setAlertDialogState({
+          ...alertDialogState,
+          isOpen: false,
+        });
+        setSelectedCategoria(null);
+        onClose();
+        CustomToasterSuccess("Datos actualizados exitosamente");
+      } else {
+        return;
+      }
     }
+
     if (mode === "eliminar") {
-      await eliminarCategoria(formState.id);
-      setAlertDialogState({
-        ...alertDialogState,
-        isOpen: false,
-      });
-      CustomToasterSuccess("Categoría eliminada exitosamente.");
+      const result = await eliminarCategoria(formState.id);
+      if (result) {
+        setAlertDialogState({
+          ...alertDialogState,
+          isOpen: false,
+        });
+        setSelectedCategoria(null);
+        onClose();
+        CustomToasterSuccess("Categoría eliminada con éxito");
+      } else {
+        return;
+      }
     }
-    setSelectedCategoria(null);
-    Limpiar();
-    onClose();
   };
 
   // AlertDialog Respuesta NO
-  const handleCancelAlertDialog = () => {
+  const cancelAction = () => {
     setAlertDialogState({
       ...alertDialogState,
       isOpen: false,
@@ -211,7 +230,7 @@ export default function FormCrudCategorias({
   };
 
   // Dialog Cancelar
-  const handleCancelDialog = () => {
+  const cancelForm = () => {
     if (mode === "agregar") {
       Limpiar();
     }
@@ -225,16 +244,13 @@ export default function FormCrudCategorias({
   };
 
   // Dialog Guardar, Salir o Eliminar -> Puede llamar a AlertDialog de confirmación
-  const handleConfirmDialog = async () => {
-    if (mode === "agregar" || mode === "editar") {
-      const validation = validCategoria({ nombre: formState.nombre });
+  const submitForm = async () => {
+    if (mode === "agregar") {
+      const validation = validCategoriaCreate({ nombre: formState.nombre });
       if (!validation.success) {
-        CustomToasterValidation(validation.error.message); // Mostrar el mensaje de validación
+        CustomToasterValidation(validation.error.message); // Error validate
         return;
       }
-    }
-
-    if (mode === "agregar") {
       setAlertDialogState({
         title: "Agregar categoría",
         description: "¿Está seguro de que desea agregar la nueva categoría?",
@@ -243,6 +259,14 @@ export default function FormCrudCategorias({
     }
 
     if (mode === "editar") {
+      const validation = validCategoriaEdit({
+        id: formState.id,
+        nombre: formState.nombre,
+      });
+      if (!validation.success) {
+        CustomToasterValidation(validation.error.message); // Error validate
+        return;
+      }
       setAlertDialogState({
         title: "Editar categoría",
         description:
@@ -275,7 +299,7 @@ export default function FormCrudCategorias({
         {/* Quito botón X por defecto y habilito tecla ESC */}
         <DialogContent
           className="temas temas-contenedor border-2 border-white [&>button[aria-label='Close']]:hidden [&>button]:hidden"
-          onEscapeKeyDown={handleCancelDialog}
+          onEscapeKeyDown={cancelForm}
         >
           <DialogHeader>
             <DialogTitle className="text-xl">
@@ -289,7 +313,7 @@ export default function FormCrudCategorias({
                 <Button
                   className="flex h-6 w-6 items-center justify-center rounded-sm bg-gray-500 hover:bg-red-400 hover:text-white"
                   aria-label="Cerrar"
-                  onClick={handleCancelDialog}
+                  onClick={cancelForm}
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -331,7 +355,7 @@ export default function FormCrudCategorias({
             <div className="flex justify-end space-x-2">
               <Button
                 type="button"
-                onClick={handleCancelDialog}
+                onClick={cancelForm}
                 variant="outline"
                 disabled={isLoading} // Deshabilitar el botón mientras se carga
               >
@@ -341,7 +365,7 @@ export default function FormCrudCategorias({
                 <Button
                   type="button"
                   variant={mode === "eliminar" ? "destructive" : "default"}
-                  onClick={handleConfirmDialog}
+                  onClick={submitForm}
                   disabled={isLoading} // Deshabilitar el botón mientras se carga
                 >
                   {isLoading ? (
@@ -369,8 +393,8 @@ export default function FormCrudCategorias({
         }
         title={alertDialogState.title}
         description={alertDialogState.description}
-        onConfirm={handleConfirmAlertDialog}
-        onCancel={handleCancelAlertDialog}
+        onConfirm={confirmAction}
+        onCancel={cancelAction}
         confirmText="Si"
         cancelText="No" // Personaliza el texto del botón de cancelar
       />

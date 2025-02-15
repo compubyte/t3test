@@ -20,11 +20,7 @@ const CategoriasContext = createContext<CategoriasContextProps | undefined>(
   undefined,
 );
 
-export function CategoriasProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function ContextCategorias({ children }: { children: React.ReactNode }) {
   const [listaCategorias, { refetch }] =
     api.categorias.getList.useSuspenseQuery();
 

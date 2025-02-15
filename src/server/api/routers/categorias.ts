@@ -4,9 +4,15 @@ import {
   publicProcedure,
 } from "@/server/api/trpc";
 import { tablaCategorias } from "@/server/db/schema";
-import { categoriaInsertSchema } from "@/server/models/modelos";
-import { validCategoria } from "@/app/(validations)/validCategoria";
-import { eq } from "drizzle-orm";
+import {
+  categoriaFullSchema,
+  categoriaInsertSchema,
+} from "@/server/models/modelos";
+import {
+  validCategoriaCreate,
+  validCategoriaEdit,
+} from "@/app/(validations)/validCategoria";
+import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
 
 export const categoriasRouter = createTRPCRouter({
@@ -56,7 +62,7 @@ export const categoriasRouter = createTRPCRouter({
     .input(categoriaInsertSchema) // Usamos directamente el schema de validación
     .mutation(async ({ ctx, input }) => {
       // Validación manual con Zod
-      const validation = validCategoria(input);
+      const validation = validCategoriaCreate(input);
       // Si la validación falla, devolvemos el error manualmente
       if (!validation.success) {
         return {
@@ -96,23 +102,46 @@ export const categoriasRouter = createTRPCRouter({
       }
     }),
   editar: publicProcedure
-    .input(
-      z.object({
-        id: z.number(), // Validar que el ID sea un número
-        nombre: z.string().min(1, "El nombre no puede estar vacío"), // Validar que el nombre no esté vacío
-      }),
-    )
+    .input(categoriaFullSchema)
     .mutation(async ({ ctx, input }) => {
+      // Validación manual con Zod
+      const validation = validCategoriaEdit(input);
+      if (!validation.success) {
+        return {
+          success: false,
+          error: validation.error,
+        };
+      }
+      // Pasó la prueba de existencia de la categoría
       try {
-        const categoriaActualizada = await ctx.db
+        await ctx.db
           .update(tablaCategorias)
           .set({ nombre: input.nombre })
-          .where(eq(tablaCategorias.id, input.id))
-          .returning(); // Devuelve la categoría actualizada
-        return categoriaActualizada; // Retornar la categoría actualizada
-      } catch (error) {
-        console.error("Error updating category:", error);
-        throw new Error("Failed to update category. Please try again later.");
+          .where(eq(tablaCategorias.id, input.id));
+        return { success: true, data: validation.data };
+      } catch (error: unknown) {
+        // Error con código PostgreSQL para unique constraint
+        if (
+          (error instanceof Error &&
+            error.message.toLowerCase().includes("unique constraint")) ||
+          (error as { code?: string }).code === "23505"
+        ) {
+          return {
+            success: false,
+            error: {
+              code: "CONFLICT",
+              message: `La categoría "${validation.data.nombre}" ya existe`,
+            },
+          };
+        }
+        // Error del servidor o por defecto
+        return {
+          success: false,
+          error: {
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Error al editar la categoría",
+          },
+        };
       }
     }),
   eliminar: publicProcedure
@@ -122,9 +151,30 @@ export const categoriasRouter = createTRPCRouter({
         await ctx.db
           .delete(tablaCategorias)
           .where(eq(tablaCategorias.id, input.id));
-      } catch (error) {
-        console.error("Error deleting category:", error);
-        throw new Error("Failed to delete category. Please try again later.");
+        return { success: true, data: input.id };
+      } catch (error: unknown) {
+        // Error con código PostgreSQL para foreign key constraint
+        if (
+          (error instanceof Error &&
+            error.message.toLowerCase().includes("foreign key constraint")) ||
+          (error as { code?: string }).code === "23503"
+        ) {
+          return {
+            success: false,
+            error: {
+              code: "CONFLICT",
+              message: "La categoría está siendo utilizada por algún producto",
+            },
+          };
+        }
+        // Error del servidor o por defecto
+        return {
+          success: false,
+          error: {
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Error al eliminar la categoría",
+          },
+        };
       }
     }),
 });
